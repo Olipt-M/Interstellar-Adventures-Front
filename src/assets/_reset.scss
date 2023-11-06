@@ -1,0 +1,27 @@
+@import "mixins";
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  @include no-margin;
+  font-size: 1.6rem;
+  min-height: 100vh;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+img {
+  width: 100%;
+}
+
+ul {
+  @include no-margin;
+}

@@ -1,0 +1,1 @@
+import { ofetch } from 'ofetch';
