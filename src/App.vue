@@ -1,9 +1,11 @@
 <script setup>
   import { RouterView } from 'vue-router';
+  import FooterLayout from '@/components/layouts/FooterLayout.vue';
 </script>
 
 <template>
   <RouterView />
+  <FooterLayout />
 </template>
 
 <style lang='scss'>

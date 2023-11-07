@@ -8,11 +8,31 @@ const router = createRouter({
       name: 'home',
       component: () => import('@/views/HomeView.vue')
     },
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   component: () => import('@/components/views/AboutView.vue')
-    // }
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/LoginView.vue')
+    },
+    {
+      path: '/planets',
+      name: 'planets',
+      component: () => import('@/views/PlanetsListView.vue')
+    },
+    {
+      path: '/planets/:id',
+      name: 'planet',
+      component: () => import('@/views/PlanetView.vue')
+    },
+    {
+      path: '/recap',
+      name: 'recap',
+      component: () => import('@/views/RecapView.vue')
+    },
+    {
+      path: '/my-account',
+      name: 'account',
+      component: () => import('@/views/AccountView.vue')
+    }
   ]
 })
 
