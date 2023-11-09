@@ -3,6 +3,7 @@
   import { getClimates, getPlanets } from '@/services/api.js';
   import { ref, onBeforeMount } from 'vue';
   import TailSpin from '@/components/icons/TailSpin.vue';
+  import PlanetCard from '@/components/cards/PlanetCard.vue';
 
   const planets = ref(undefined);
   const isViewLoaded = ref(false);
@@ -26,7 +27,7 @@
     </aside>
 
     <main class="list-container">
-      <p v-for="planet in planets" :key="planet.id">{{ planet.name }}</p>
+      <PlanetCard v-for="planet in planets" :key="planet.id" :planet="planet"/>
       <TailSpin v-show="!isViewLoaded" class="loader"/>
     </main>
   </div>
