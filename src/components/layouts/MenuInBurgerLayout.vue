@@ -31,7 +31,7 @@
     background-color: $color-dark-blue3;
     transform: translate(0, -100%);
     transition: transform 0.3s ease-in-out;
-    z-index: 2;
+    z-index: 1;
   }
 
   nav.opened {
@@ -58,6 +58,10 @@
     background: none;
     border: none;
     color: $color-light;
+  }
+
+  ul {
+    margin: 0;
   }
   
   li {

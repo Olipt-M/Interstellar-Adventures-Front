@@ -26,6 +26,10 @@
     padding: 3rem;
   }
 
+  p {
+    margin: 0;
+  }
+
   .nav-link {
     color: $color-light;
     text-decoration: none;

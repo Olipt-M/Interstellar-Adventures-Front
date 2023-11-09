@@ -13,5 +13,6 @@
     text-align: center;
     color: $color-light;
     padding: 3rem;
+    margin: 0;
   }
 </style>

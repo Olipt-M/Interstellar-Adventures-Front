@@ -14,6 +14,10 @@
 </template>
 
 <style lang="scss" scoped>
+  ul {
+    margin: 0;
+  }
+  
   li {
   display: inline-block;
   margin-right: 2rem;

@@ -21,7 +21,3 @@ body {
 img {
   width: 100%;
 }
-
-h1, p, ul {
-  @include no-margin;
-}
