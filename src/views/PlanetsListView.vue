@@ -42,4 +42,17 @@
   .filters-container, .list-container {
     background: $color-dark-blue2;
   }
+
+  .filters-container {
+    border-radius: 1rem 0 0 1rem;
+  }
+
+  .list-container {
+    border-radius: 0 1rem 1rem 0;
+  }
+
+  .loader {
+    display: block;
+    margin: auto;
+  }
 </style>

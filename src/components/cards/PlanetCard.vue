@@ -1,10 +1,14 @@
 <script setup>
+  import { ref } from 'vue';
   const props = defineProps({
     planet: {
       type: Object,
       required: true
     }
   });
+
+  const lastJourneyType = ref(props.planet.journeyTypes[props.planet.journeyTypes.length - 1].name);
+  
 </script>
 
 <template>
@@ -20,8 +24,13 @@
       <p>Capitale : {{ planet.capital === null ? '-' : planet.capital }}</p>
       <p>Année de colonisation : {{ planet.date_colonization === null ? '-' : planet.date_colonization }}</p>
       <p>Nombre d'habitants : {{ planet.nb_inhabitants === null ? '-' : planet.nb_inhabitants }}</p>
-      <p>Climat : </p>
-      <p>Voyages disponibles :</p>
+      <p>Climat : {{ planet.climate.name }}</p>
+      <p>
+        Voyages disponibles :
+        <ul class="journey-types">
+          <li v-for="journeyType in planet.journeyTypes" :key="journeyType.id">{{ journeyType.name }}{{journeyType.name == lastJourneyType.value ? ',&nbsp' : ''}}</li>
+        </ul>
+      </p>
     </div>
   </div>
 </template>
@@ -58,6 +67,20 @@
 
     &:last-of-type {
       margin-bottom: 1rem;
+    }
+  }
+
+  .journey-types {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+
+    li {
+      display: inline-block;
+    }
+
+    li:not(:first-of-type) {
+      text-transform: lowercase;
     }
   }
 </style>
