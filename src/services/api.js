@@ -8,3 +8,4 @@ export const getPlanets = async () => {
 export const getClimates = async () => {
   return api(`/climates`, { method: 'GET' });
 }
+

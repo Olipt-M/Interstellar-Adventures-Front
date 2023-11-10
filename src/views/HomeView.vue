@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <H1TitleLayout>Interstellar Adventures</H1TitleLayout>
+  <H1TitleLayout>Interstellar Adventures, c bo</H1TitleLayout>
 </template>
 
 <style lang='scss' scoped>
