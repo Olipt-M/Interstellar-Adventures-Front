@@ -8,3 +8,7 @@ export const getPlanets = async () => {
 export const getClimates = async () => {
   return api(`/climates`, { method: 'GET' });
 }
+
+export const getJourneyTypes = async () => {
+  return api(`/journey-types`, { method: 'GET' });
+}

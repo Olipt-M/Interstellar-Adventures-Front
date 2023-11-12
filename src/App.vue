@@ -18,6 +18,7 @@
   body {
     font-family: 'Electrolize', sans-serif;
     background-color: $color-dark-blue1;
+    color: $color-night-blue;
   }
 
   input, textarea, select, button {
