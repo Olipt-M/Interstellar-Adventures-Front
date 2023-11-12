@@ -6,8 +6,6 @@
       required: true
     }
   });
-
-  const lastJourneyType = ref(props.planet.journeyTypes[props.planet.journeyTypes.length - 1].name);
   
 </script>
 
@@ -23,12 +21,19 @@
       <p>Distance : {{ planet.distance_from_earth }}</p>
       <p>Capitale : {{ planet.capital === null ? '-' : planet.capital }}</p>
       <p>Année de colonisation : {{ planet.date_colonization === null ? '-' : planet.date_colonization }}</p>
-      <p>Nombre d'habitants : {{ planet.nb_inhabitants === null ? '-' : planet.nb_inhabitants }}</p>
+      <p>Nombre d'habitants : {{ planet.nb_inhabitants === null ? '-' : 
+        (planet.nb_inhabitants < 1000000 ? new Intl.NumberFormat("fr-FR").format(planet.nb_inhabitants) : 
+          (planet.nb_inhabitants >= 1000000000 ? `${(planet.nb_inhabitants / 1000000000).toFixed(2)} milliards` : `${(planet.nb_inhabitants / 1000000).toFixed(2)} millions`)
+        ) }}
+      </p>
       <p>Climat : {{ planet.climate.name }}</p>
       <p>
         Voyages disponibles :
         <ul class="journey-types">
-          <li v-for="journeyType in planet.journeyTypes" :key="journeyType.id">{{ journeyType.name }}{{journeyType.name == lastJourneyType.value ? ',&nbsp' : ''}}</li>
+          <li v-for="(journeyType, index) in planet.journeyTypes" :key="journeyType.id">
+            {{index === 0 ? '' : ',&nbsp'}}
+            {{ journeyType.name }}
+          </li>
         </ul>
       </p>
     </div>
@@ -77,10 +82,13 @@
 
     li {
       display: inline-block;
-    }
 
-    li:not(:first-of-type) {
-      text-transform: lowercase;
+      &:not(:first-of-type) {
+        text-transform: lowercase;
+      }
+      &:first-of-type::first-letter {
+        text-transform: capitalize;
+      }
     }
   }
 </style>
