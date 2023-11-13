@@ -10,7 +10,7 @@
 </script>
 
 <template>
-  <div class="container">
+  <div class="card-container">
     <div class="img-container">
       <img :src="`img-planetes/${planet.picture}`" :alt="planet.name">
     </div>
@@ -41,11 +41,12 @@
 </template>
 
 <style lang="scss" scoped>
-  .container {
+  .card-container {
     display: flex;
     align-items: center;
-    gap: 4rem;
+    gap: 2rem;
     color: $color-light;
+    padding: 2rem;
   }
 
   img {
