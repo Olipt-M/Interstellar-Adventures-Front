@@ -7,7 +7,7 @@
 <template>
   <div>
     <H1TitleLayout>Interstellar Adventures</H1TitleLayout>
-    <Carousel />
+    <Carousel/>
   </div>
 </template>
 
