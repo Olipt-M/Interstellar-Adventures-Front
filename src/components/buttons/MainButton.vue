@@ -1,8 +1,7 @@
 <script setup>
   const props = defineProps({
     colorMode: {
-      type: String,
-      required: true
+      type: String
     }
   });
 </script>
