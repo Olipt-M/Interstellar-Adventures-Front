@@ -1,5 +1,7 @@
 <script setup>
   import { ref } from 'vue';
+  import { RouterLink } from 'vue-router';
+
   const props = defineProps({
     planet: {
       type: Object,
@@ -12,11 +14,13 @@
 <template>
   <div class="card-container">
     <div class="img-container">
-      <img :src="`img-planetes/${planet.picture}`" :alt="planet.name">
+      <router-link :to="{name: 'planet', params: {id: planet.id}}">
+        <img :src="`img-planetes/${planet.picture}`" :alt="planet.name">
+      </router-link>
     </div>
 
     <div class="description-container">
-      <h3>{{ planet.name }}</h3>
+      <h3><router-link :to="{name: 'planet', params: {id: planet.id}}" class="link">{{ planet.name }}</router-link></h3>
       <p>{{ planet.system }}</p>
       <p>Distance : {{ planet.distance_from_earth }}</p>
       <p>Capitale : {{ planet.capital === null ? '-' : planet.capital }}</p>
@@ -62,6 +66,11 @@
     margin: 0;
     padding: 1rem;
     font-size: 2.4rem;
+  }
+
+  .link {
+    color: $color-light;
+    text-decoration: none;
   }
 
   p {
