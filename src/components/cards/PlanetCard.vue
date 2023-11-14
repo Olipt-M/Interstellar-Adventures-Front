@@ -10,7 +10,7 @@
 </script>
 
 <template>
-  <div class="container">
+  <div class="card-container">
     <div class="img-container">
       <img :src="`img-planetes/${planet.picture}`" :alt="planet.name">
     </div>
@@ -41,11 +41,12 @@
 </template>
 
 <style lang="scss" scoped>
-  .container {
+  .card-container {
     display: flex;
     align-items: center;
-    gap: 4rem;
+    gap: 2rem;
     color: $color-light;
+    padding: 2rem;
   }
 
   img {
@@ -89,6 +90,19 @@
       &:first-of-type::first-letter {
         text-transform: capitalize;
       }
+    }
+  }
+
+  @media screen and (max-width: $lg-breakpoint) {
+    .card-container {
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
     }
   }
 </style>
