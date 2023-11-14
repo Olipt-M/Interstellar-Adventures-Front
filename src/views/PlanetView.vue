@@ -1,6 +1,7 @@
 <script setup>
   import { useRoute } from 'vue-router';
   import H1TitleLayout from '@/components/layouts/H1TitleLayout.vue';
+  import MainButton from '@/components/buttons/MainButton.vue';
   import { getPlanet, getJourneyTypes, getShip } from '@/services/api.js';
   import { ref } from 'vue';
 
@@ -83,11 +84,21 @@
           </div>
         </div>
     </div>
+    <MainButton class="main-button">Valider</MainButton>
   </div>
+
+  
 </template>
 
 <style lang='scss' scoped>
 
+  .main-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0em auto 5rem auto;
+    width: 25%;
+  }
   .hr-1 {
     width: 70%;
     margin: 4em auto 1.5em auto;
@@ -123,8 +134,6 @@
   text-align: center;
   width: 50%;
   }
-
-
   .journey-types-container {
     display: flex;
     flex-direction: column;
