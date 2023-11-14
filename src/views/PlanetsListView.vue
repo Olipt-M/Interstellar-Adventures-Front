@@ -4,6 +4,7 @@
   import { ref, onBeforeMount, computed } from 'vue';
   import TailSpin from '@/components/icons/TailSpin.vue';
   import PlanetCard from '@/components/cards/PlanetCard.vue';
+  import MainButton from '@/components/buttons/MainButton.vue';
 
   // Consume API
   const planets = ref(undefined);
@@ -110,6 +111,7 @@
         <PlanetCard :planet="planet" class="planet-card"/>
         <hr v-if="index < filteredPlanets.length - 1">
       </div>
+      <MainButton v-show="isViewLoaded">Afficher plus</MainButton>
       <TailSpin v-show="!isViewLoaded" class="loader"/>
     </main>
   </div>

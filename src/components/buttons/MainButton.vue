@@ -9,7 +9,7 @@
 
 <template>
   <button v-if="colorMode==='light'" type="button" class="light-mode"><slot/></button>
-  <button v-else="colorMode==='dark'" type="button" class="dark-mode"><slot/></button>
+  <button v-else type="button" class="dark-mode"><slot/></button>
 </template>
 
 <style lang="scss" scoped>
