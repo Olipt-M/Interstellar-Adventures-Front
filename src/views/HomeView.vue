@@ -17,7 +17,10 @@
 
 <template>
     <H1TitleLayout>Interstellar Adventures</H1TitleLayout>
-    <p>Explore the vast expanse of our solar system</p>
+      <p>
+        Voyagez jusqu’aux confins de l’univers grâce à nos services, à bord des vaisseaux les plus modernes. 
+        Embarquez pour les destinations et les durées de votre choix.
+      </p>
     <div>
       <!-- <PlanetImageCard v-for="planet in planets" :key="planet.id" :planet="planet"/> -->
       <Carousel/>
