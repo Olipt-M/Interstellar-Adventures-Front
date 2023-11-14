@@ -5,27 +5,16 @@
   import TailSpin from '@/components/icons/TailSpin.vue';
   import PlanetCard from '@/components/cards/PlanetCard.vue';
 
+  // Consume API
   const planets = ref(undefined);
   const isViewLoaded = ref(false);
   const climates = ref(undefined);
   const journeyTypes = ref(undefined);
-  const checkedClimatesIds = ref([]);
-  // const filteredPlanets = computed(() => []);
-
-  const filterClimates = (id) => {
-    if (checkedClimatesIds.value.indexOf(id) === -1) {
-      checkedClimatesIds.value.push(id);
-    } else {
-      checkedClimatesIds.value.splice(checkedClimatesIds.value.indexOf(id), 1);
-    }
-  };
 
   onBeforeMount(() => {
     setTimeout(() => {
       getPlanets()
         .then(response => planets.value = response)
-        // .then(response => response.filter(planet => checkedClimatesIds.value.includes(planet.climate.id)))
-        // .then(response => filteredPlanets.value = response)
         .catch(error => console.error(error));
       isViewLoaded.value = true;
     }, "1500");
@@ -39,11 +28,44 @@
       .catch(error => console.error(error));
   });
 
+  // Filter planets
+  // Fill the filter tables
+  const checkedClimatesIds = ref([]);
+  const checkedJourneyTypesIds = ref([]);
+
+  const filterClimates = (id) => {
+    if (checkedClimatesIds.value.indexOf(id) === -1) {
+      checkedClimatesIds.value.push(id);
+    } else {
+      checkedClimatesIds.value.splice(checkedClimatesIds.value.indexOf(id), 1);
+    }
+  };
+
+  const filterJourneyTypes = (id) => {
+    if (checkedJourneyTypesIds.value.indexOf(id) === -1) {
+      checkedJourneyTypesIds.value.push(id);
+    } else {
+      checkedJourneyTypesIds.value.splice(checkedJourneyTypesIds.value.indexOf(id), 1);
+    }
+  };
+
+  // Apply the filters
   const filteredPlanets = computed(() => {
-    if (checkedClimatesIds.value.length === 0) {
+    if (checkedClimatesIds.value.length === 0 && checkedJourneyTypesIds.value.length === 0) {
       return planets.value;
     }
-    return planets.value.filter(planet => checkedClimatesIds.value.includes(planet.climate.id));
+    else if (checkedClimatesIds.value.length !== 0 && checkedJourneyTypesIds.value.length === 0) {
+      return planets.value.filter(planet => checkedClimatesIds.value.includes(planet.climate.id));
+    }
+    else if (checkedClimatesIds.value.length === 0 && checkedJourneyTypesIds.value.length !== 0) {
+      return planets.value.filter(planet => planet.journeyTypes.some(journeyType => checkedJourneyTypesIds.value.includes(journeyType.id)));
+    }
+    else {
+      return planets.value.filter(planet => 
+        checkedClimatesIds.value.includes(planet.climate.id) 
+        && planet.journeyTypes.some(journeyType => checkedJourneyTypesIds.value.includes(journeyType.id))
+      );
+    }
   });
 </script>
 
@@ -52,27 +74,42 @@
 
   <div class="container">
     <aside class="filters-container">
-      <form class="filter journey-filter">
+      <form class="journeys-filter">
         <h3>Types de voyage</h3>
 
         <div class="form-group" v-for="journeyType in journeyTypes" :key="journeyType.id">
-          <input type="checkbox" :name="journeyTypeId" :value="journeyType.id" :id="journeyType.id">
-          <label :for="journeyType.id">{{ journeyType.name }}</label>
+          <input
+            type="checkbox"
+            name="journeyTypeId"
+            :value="journeyType.id"
+            :id="journeyType.name"
+            @change="filterJourneyTypes(journeyType.id)"
+          >
+          <label :for="journeyType.name">{{ journeyType.name }}</label>
         </div>
       </form>
 
-      <form class="filter climates-filter">
+      <form class="climates-filter">
         <h3>Climats</h3>
         
         <div class="form-group" v-for="climate in climates" :key="climate.id">
-          <input type="checkbox" :name="climateId" :value="climate.id" :id="climate.id" @change="filterClimates(climate.id)">
-          <label :for="climate.id">{{ climate.name }}</label>
+          <input
+            type="checkbox"
+            name="climateId"
+            :value="climate.id"
+            :id="climate.name"
+            @change="filterClimates(climate.id)"
+          >
+          <label :for="climate.name">{{ climate.name }}</label>
         </div>
       </form>
     </aside>
 
     <main class="list-container">
-      <PlanetCard v-for="planet in filteredPlanets" :key="planet.id" :planet="planet"/>
+      <div v-for="(planet, index) in filteredPlanets" :key="planet.id">
+        <PlanetCard :planet="planet" class="planet-card"/>
+        <hr v-if="index < filteredPlanets.length - 1">
+      </div>
       <TailSpin v-show="!isViewLoaded" class="loader"/>
     </main>
   </div>
@@ -80,11 +117,12 @@
 
 <style lang='scss' scoped>
   .container {
-    max-width: $xl-breakpoint;
-    margin: 3rem;
+    margin: auto;
+    padding: 3rem;
     display: flex;
-    gap: 3rem 2rem;
+    gap: 0 2rem;
     justify-content: center;
+    max-width: $xxl-breakpoint;
   }
 
   .filters-container, .list-container {
@@ -93,9 +131,11 @@
 
   .filters-container {
     border-radius: 1rem 0 0 1rem;
+    flex-basis: 15%;
+    min-width: 200px;
   }
 
-  .filter {
+  .journeys-filter, .climates-filter {
     background: $color-light;
     border-radius: 1rem;
     margin: 4rem 2rem;
@@ -116,15 +156,36 @@
       &:last-of-type {
         padding-bottom: 2rem;
       }
+
+      label, input {
+        cursor: pointer;
+      }
     }
   }
 
   .list-container {
     border-radius: 0 1rem 1rem 0;
+    flex-basis: 80%;
+  }
+
+  .planet-card:first-of-type {
+    margin-top: 2rem;
+  }
+
+  hr {
+    margin: 1rem auto;
+    width: 60%;
+    color: $color-light;
   }
 
   .loader {
     display: block;
-    margin: auto;
+    margin: 3rem auto;
+  }
+
+  @media screen and (max-width: $lg-breakpoint) {
+    .container {
+      padding: 3rem 1rem;
+    }
   }
 </style>

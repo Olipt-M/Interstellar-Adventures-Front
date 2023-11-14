@@ -92,4 +92,17 @@
       }
     }
   }
+
+  @media screen and (max-width: $lg-breakpoint) {
+    .card-container {
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
 </style>
