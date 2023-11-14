@@ -1,6 +1,6 @@
 <script setup>
   import H1TitleLayout from '@/components/layouts/H1TitleLayout.vue';
-  import { getClimates, getJourneyTypes, getPlanets } from '@/services/api.js';
+  import { getClimates, getJourneyTypes, getPlanets, getNbOfPlanets } from '@/services/api.js';
   import { ref, onBeforeMount, computed } from 'vue';
   import TailSpin from '@/components/icons/TailSpin.vue';
   import PlanetCard from '@/components/cards/PlanetCard.vue';
@@ -11,10 +11,15 @@
   const isViewLoaded = ref(false);
   const climates = ref(undefined);
   const journeyTypes = ref(undefined);
+  const page = ref(1);
+  const maxPlanetsAtOnce = ref(5);
+  const nbOfPlanets = ref('');
 
   onBeforeMount(() => {
+    getNbOfPlanets().then(response => nbOfPlanets.value = response);
+
     setTimeout(() => {
-      getPlanets()
+      getPlanets(page.value, maxPlanetsAtOnce.value)
         .then(response => planets.value = response)
         .catch(error => console.error(error));
       isViewLoaded.value = true;
@@ -28,6 +33,17 @@
       .then(response => journeyTypes.value = response)
       .catch(error => console.error(error));
   });
+
+  const displayMore = () => {
+    isViewLoaded.value = false;
+
+    setTimeout(() => {
+      getPlanets(++page.value, maxPlanetsAtOnce.value)
+      .then(response => planets.value = planets.value.concat(response))
+      .catch(error => console.error(error));
+      isViewLoaded.value = true;
+    }, "1500");
+  }
 
   // Filter planets
   // Fill the filter tables
@@ -107,12 +123,14 @@
     </aside>
 
     <main class="list-container">
-      <div v-for="(planet, index) in filteredPlanets" :key="planet.id">
-        <PlanetCard :planet="planet" class="planet-card"/>
-        <hr v-if="index < filteredPlanets.length - 1">
+      <div class="list">
+        <div v-for="(planet, index) in filteredPlanets" :key="planet.id">
+          <PlanetCard :planet="planet" class="planet-card"/>
+          <hr v-if="index < filteredPlanets.length - 1">
+        </div>
       </div>
-      <MainButton v-show="isViewLoaded">Afficher plus</MainButton>
       <TailSpin v-show="!isViewLoaded" class="loader"/>
+      <MainButton v-show="isViewLoaded && page < nbOfPlanets / maxPlanetsAtOnce" class="display-button" @click="displayMore()">Afficher plus</MainButton>
     </main>
   </div>
 </template>
@@ -178,6 +196,11 @@
     margin: 1rem auto;
     width: 60%;
     color: $color-light;
+  }
+
+  .display-button {
+    display: block;
+    margin: 3rem auto 5rem;
   }
 
   .loader {
