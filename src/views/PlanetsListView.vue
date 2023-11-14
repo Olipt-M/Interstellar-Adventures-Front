@@ -13,8 +13,11 @@
   // const filteredPlanets = computed(() => []);
 
   const filterClimates = (id) => {
-    checkedClimatesIds.value.push(id);
-    console.log(checkedClimatesIds.value);
+    if (checkedClimatesIds.value.indexOf(id) === -1) {
+      checkedClimatesIds.value.push(id);
+    } else {
+      checkedClimatesIds.value.splice(checkedClimatesIds.value.indexOf(id), 1);
+    }
   };
 
   onBeforeMount(() => {
@@ -40,9 +43,6 @@
     if (checkedClimatesIds.value.length === 0) {
       return planets.value;
     }
-
-    // if (planets.value.find())
-
     return planets.value.filter(planet => checkedClimatesIds.value.includes(planet.climate.id));
   });
 </script>
