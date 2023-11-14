@@ -5,6 +5,10 @@ export const getPlanets = async () => {
   return api(`/planets`, { method: 'GET' });
 }
 
+export const getPlanet = async (id) => {
+  return api (`/planets/${id}`, { method: 'GET' });
+}
+
 export const getClimates = async () => {
   return api(`/climates`, { method: 'GET' });
 }
