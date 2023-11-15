@@ -1,5 +1,6 @@
 <script setup>
 import H1TitleLayout from '@/components/layouts/H1TitleLayout.vue';
+import FooterLayout from '@/components/layouts/FooterLayout.vue';
 import { ref } from "vue";
 
 const displayLogin = ref(true);
@@ -21,11 +22,11 @@ const displayLogin = ref(true);
             </div>
             <form action="" v-if="displayLogin">
                 <div class="container-login">
-                    <div class="container-input">
+                    <div class="container-input-login">
                         <label for="email">Email :</label>
                         <input type="email" id="email" placeholder="myemail@mail.com">
                     </div>
-                    <div class="container-input">
+                    <div class="container-input-login">
                         <label for="password">Mot de passe :</label>
                         <input type="password" id="password" placeholder="**********">
                     </div>
@@ -36,15 +37,15 @@ const displayLogin = ref(true);
             <form action="" v-else="!displayLogin">
                 <div class="container-signin">
                     <div class="container-form-left">
-                        <div class="container-input">
+                        <div class="container-input-signin">
                             <label for="firstname">Prénom :</label>
                             <input type="text" id="firstname" placeholder="Hector">
                         </div>
-                        <div class="container-input">
+                        <div class="container-input-signin">
                             <label for="email">Email :</label>
                             <input type="email" id="email" placeholder="myemail@mail.com">
                         </div>
-                        <div class="container-input">
+                        <div class="container-input-signin">
                             <label for="password">Mot de passe :</label>
                             <input type="password" id="password" placeholder="**********">
                         </div>
@@ -52,15 +53,15 @@ const displayLogin = ref(true);
                     <div class="lign-form-middle">
                     </div>
                     <div class="container-form-right">
-                        <div class="container-input">
+                        <div class="container-input-signin">
                             <label for="lastname">Nom :</label>
                             <input type="text" id="lastname" placeholder="Lilas">
                         </div>
-                        <div class="container-input">
+                        <div class="container-input-signin">
                             <label for="confEmail">Confirmation de l'email :</label>
                             <input type="email" id="confEmail" placeholder="myemail@mail.com">
                         </div>
-                        <div class="container-input">
+                        <div class="container-input-signin">
                             <label for="confPassword">Confirmation du mot de passe :</label>
                             <input type="password" id="confPassword" placeholder="**********">
                         </div>
@@ -84,30 +85,27 @@ body {
 }
 
 main {
-    height: 100%;
+    height: calc(100vh - 200px);
     width: 100%;
 }
 
 .container-form {
     display: flex;
     flex-direction: column;
+    width: 80%;
     border: 1px solid $color-light;
     border-radius: 1%;
-    width: 56%;
-    margin-top: 3%;
-    margin-bottom: 4%;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 10%;
+    margin-top: 5%;
     background-color: $color-dark-blue2;
 }
 
 .container-btn {
-    width: 40%;
-    margin-left: 30%;
-    margin-right: 30%;
     display: flex;
     flex-direction: row;
     justify-content: center;
+    width: 40%;
+    margin-left: 30%;
     margin-top: 8.5%;
     margin-bottom: 8%;
 
@@ -120,6 +118,34 @@ main {
         border-radius: 0 0.3rem 0.3rem 0;
         text-align: center;
     }
+
+    @media (width <=$sm-breakpoint) {
+        width: 60%;
+        margin-left: 20%;
+        margin-top: 10.5%;
+        margin-bottom: 9%;
+    }
+
+    @media (width <=$md-breakpoint ) {
+        width: 60%;
+        margin-left: 20%;
+        margin-top: 10.5%;
+        margin-bottom: 9%;
+    }
+
+    @media (width <=$lg-breakpoint ) {
+        width: 40%;
+        margin-left: 25%;
+        margin-top: 9%;
+        margin-bottom: 7%;
+    }
+
+    @media (width <=$xl-breakpoint ) {
+        width: 50%;
+        margin-left: 25%;
+        margin-top: 9%;
+        margin-bottom: 7%;
+    }
 }
 
 input[type="radio"].btn {
@@ -127,16 +153,20 @@ input[type="radio"].btn {
 }
 
 input[type="radio"].btn+label {
-    height: 5rem;
     width: 50%;
     border: 1px solid transparent;
-    background-color: #9DC1D7;
     padding: 1rem;
     font-size: 2rem;
     font-weight: bold;
     line-height: 1.5;
     color: black;
     transition: all 0.5s ease-in-out;
+    background-color: #9DC1D7;
+
+    @media (width <=$lg-breakpoint ) {
+        padding: 1.5rem;
+        font-size: 2.5rem;
+    }
 }
 
 input[type="radio"].btn:checked+label {
@@ -175,19 +205,52 @@ input[type="radio"].btn:checked+label {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        margin-left: 10%;
         width: 50%;
+        margin-left: 10%;
     }
 }
 
-.container-input {
+.container-input-login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 8%;
+
+    label {
+        margin-bottom: 4.5%;
+        color: $color-light;
+
+        @media (width <=$lg-breakpoint ) {
+            font-size: 2rem;
+            margin-bottom: 6%;
+        }
+    }
+
+    input {
+        height: 2.8rem;
+        width: 17rem;
+        border-style: none;
+        border-radius: 0.5rem;
+        padding-left: 1rem;
+
+        @media (width <=$lg-breakpoint ) {
+            width: 17rem;
+            border-style: none;
+            border-radius: 0.5rem;
+            padding: 1.9rem;
+            font-size: 1.6rem;
+        }
+    }
+}
+
+.container-input-signin {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     margin-bottom: 8%;
 
     label {
-        margin-bottom: 2%;
+        margin-bottom: 3%;
         color: $color-light;
     }
 
@@ -205,11 +268,28 @@ input:focus {
 }
 
 input[type="submit"] {
-    height: 4.5rem;
     width: 24%;
     margin-left: 38%;
     margin-top: 2%;
     margin-bottom: 7%;
+    padding: 1rem;
     font-size: 2rem;
 }
-</style>
+
+// @media (width <= $sm-breakpoint) {
+
+// }
+
+// @media ($sm-breakpoint < width <= $md-breakpoint ) {
+
+// }
+
+// @media (width <= $lg-breakpoint ) {
+
+// }
+
+// @media (width <= $xl-breakpoint ) {
+
+// }
+
+// pas besoin de préciser que la width est > à breakpoint précédent </style>
