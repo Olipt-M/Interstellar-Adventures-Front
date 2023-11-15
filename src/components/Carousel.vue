@@ -31,9 +31,9 @@ export default {
 
 <template>
   <div>
-    <carousel :items-to-show="1">
+    <carousel :autoplay="3000" :items-to-show="1">
       <slide v-for="planet in planets" :key="planet.id">
-        <img :src="planet.picture" :alt="planet.name">
+        <img :src="`img-planetes/${planet.picture}`" :alt="planet.name">
       </slide>
       <template #addons>
         <navigation />
