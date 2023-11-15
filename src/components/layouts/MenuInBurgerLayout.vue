@@ -28,7 +28,7 @@
     top: 0;
     left: 0;
     width: 100vw;
-    background-color: $color-dark-blue3;
+    background-color: $color-night-blue;
     transform: translate(0, -100%);
     transition: transform 0.3s ease-in-out;
     z-index: 1;

@@ -46,7 +46,7 @@
       getPlanets(++page.value, maxPlanetsAtOnce.value)
       .then(response => newPlanets.value = response)
       .then(response => planetsArray.value = planetsArray.value.concat(response.data))
-      .then(() => console.log(planetsArray.value))
+      // .then(() => console.log(planetsArray.value))
       .catch(error => console.error(error));
       isViewLoaded.value = true;
     }, "1500");
