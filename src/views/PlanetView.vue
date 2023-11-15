@@ -3,13 +3,14 @@
   import H1TitleLayout from '@/components/layouts/H1TitleLayout.vue';
   import MainButton from '@/components/buttons/MainButton.vue';
   import { getPlanet, getJourneyTypes, getShips } from '@/services/api.js';
-  import { ref } from 'vue';
+  import { ref, onMounted } from 'vue';
 
+  const route = useRoute();
   const planet = ref(undefined);
   const journeyTypes = ref(undefined);
-  const ship = ref(undefined);
-  const route = useRoute();
+  const ships = ref(undefined);
   const selectedJourneyType = ref(null);
+  const selectedShip = ref(null);
   const departureDate = ref(null);
   const returnDate = ref(null);
 
@@ -25,20 +26,29 @@
     return `${year}-${month}-${day}`;
   };
 
-  getPlanet(2)
+  getPlanet(route.params.id)
     .then(response => planet.value = response)
     .catch(error => console.error(error));
 
-  getJourneyTypes(1)
+
+  onMounted(async () => {
+    try {
+      const planetId = route.params.id;
+      const response = await getPlanet(planetId);
+      planet.value = response;
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
+  getJourneyTypes()
     .then(response => journeyTypes.value = response)
     .catch(error => console.error(error));
 
   getShips()
-    .then(response => ship.value = response)
+    .then(response => ships.value = response)
     .catch(error => console.error(error));
 
-
-  
 
 </script>
 
@@ -51,7 +61,7 @@
         <img :src="`../img-planetes/${planet.picture}`" :alt="planet.name">
       </div>
       <div class="description-container">
-        <p>{{ planet.description }}
+        <p>{{ planet.system }}
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, accusamus excepturi sed mollitia quae fugit facere labore rem ipsam quam soluta incidunt voluptatibus quos obcaecati ipsum sapiente nihil suscipit! Dolorum?
         Et velit dolore recusandae? Modi maiores quaerat quos unde dolore asperiores adipisci, nisi minus culpa iure quibusdam. Enim tempore fuga dolor saepe quisquam molestias dicta! In, ab mollitia! Recusandae, in?
         Alias impedit perspiciatis sequi veritatis sapiente dolorum est similique quibusdam architecto assumenda aut quam voluptatum facilis tempora tempore, quod ab aspernatur delectus numquam non! Laborum deserunt quo suscipit repellat. Amet!
@@ -85,15 +95,15 @@
     <div class="ships-container">
       <h2 class="title-2">Choisissez votre vaisseau</h2>
         <div class="ships-flex-container">
-          <div class="ships-img-container-eco">
+          <div class="ships-img-container-eco" v-for="ship in ships" :key="ship.id" :value="ship.id">
             <p class="class">Classe Économique</p>
             <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name">
           </div>
-          <div class="ships-img-container-standard">
+          <div class="ships-img-container-standard" v-for="ship in ships" :key="ship.id" :value="ship.id">
             <p class="class">Classe Standard</p>
-            <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name">
+                <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name">
           </div>
-          <div class="ships-img-container-premium">
+          <div class="ships-img-container-premium" v-for="ship in ships" :key="ship.id" :value="ship.id">
             <p class="class">Classe Premium</p>
             <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name">
           </div>
@@ -140,7 +150,7 @@
   }
   .img-container {
     width: 100%;
-    margin: 3.5rem 0 1.5rem 0;
+    margin: 3rem 0 1.5rem 0;
   }
   .title-1 {
     text-align: center;
@@ -205,13 +215,14 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
   }
   .ships-img-container-eco, 
   .ships-img-container-standard, 
   .ships-img-container-premium {
 
       flex-basis: 30%;
-      margin: 4rem 2rem 5rem 2rem; 
+      margin: 4rem 2rem 4rem 2rem; 
 
       @media (max-width: $lg-breakpoint) {
         flex-basis: 100%;
@@ -227,8 +238,10 @@
     }
   
   .class{
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 0 0 1rem 0;
-    text-align: center;
     color: $color-light;
   }
 
@@ -237,7 +250,8 @@
   .ships-img-container-premium img{
     border-radius: 0.5rem;
     &:hover {
-      transform: scale(1.05);
+      transform: scale(1.03);
+      box-shadow: 0 0 1rem $color-light;
       transition: transform 0.3s ease-in-out;
       cursor: pointer;
     }
