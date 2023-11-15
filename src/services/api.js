@@ -5,8 +5,8 @@ export const getPlanets = async (page = 1, limit = 5) => {
   return api(`/planets/${page}/${limit}`, { method: 'GET' });
 }
 
-export const getNbOfPlanets = async () => api(`/planets`, { method: 'GET' })
-  .then(response => response.length)
+// export const getNbOfPlanets = async () => api(`/planets`, { method: 'GET' })
+//   .then(response => response.length)
 
 export const getPlanet = async (id) => {
   return api (`/planets/${id}`, { method: 'GET' });

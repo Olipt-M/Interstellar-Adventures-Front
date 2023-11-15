@@ -1,6 +1,6 @@
 <script setup>
   import H1TitleLayout from '@/components/layouts/H1TitleLayout.vue';
-  import { getClimates, getJourneyTypes, getPlanets, getNbOfPlanets } from '@/services/api.js';
+  import { getClimates, getJourneyTypes, getPlanets } from '@/services/api.js';
   import { ref, onBeforeMount, computed } from 'vue';
   import TailSpin from '@/components/icons/TailSpin.vue';
   import PlanetCard from '@/components/cards/PlanetCard.vue';
@@ -8,19 +8,24 @@
 
   // Consume API
   const planets = ref(undefined);
+  const newPlanets = ref(undefined);
+  const planetsArray = ref([]);
   const isViewLoaded = ref(false);
   const climates = ref(undefined);
   const journeyTypes = ref(undefined);
   const page = ref(1);
   const maxPlanetsAtOnce = ref(5);
-  const nbOfPlanets = ref('');
+  const nbOfPlanets = ref(undefined);
 
   onBeforeMount(() => {
-    getNbOfPlanets().then(response => nbOfPlanets.value = response);
+    // getNbOfPlanets().then(response => nbOfPlanets.value = response);
 
     setTimeout(() => {
       getPlanets(page.value, maxPlanetsAtOnce.value)
         .then(response => planets.value = response)
+        .then(response => planetsArray.value = response.data)
+        .then(() => nbOfPlanets.value = planets.value.meta.total)
+        // .then(() => console.log(planets.value))
         .catch(error => console.error(error));
       isViewLoaded.value = true;
     }, "1500");
@@ -39,7 +44,9 @@
 
     setTimeout(() => {
       getPlanets(++page.value, maxPlanetsAtOnce.value)
-      .then(response => planets.value = planets.value.concat(response))
+      .then(response => newPlanets.value = response)
+      .then(response => planetsArray.value = planetsArray.value.concat(response.data))
+      .then(() => console.log(planetsArray.value))
       .catch(error => console.error(error));
       isViewLoaded.value = true;
     }, "1500");
@@ -69,16 +76,16 @@
   // Apply the filters
   const filteredPlanets = computed(() => {
     if (checkedClimatesIds.value.length === 0 && checkedJourneyTypesIds.value.length === 0) {
-      return planets.value;
+      return planetsArray.value;
     }
     else if (checkedClimatesIds.value.length !== 0 && checkedJourneyTypesIds.value.length === 0) {
-      return planets.value.filter(planet => checkedClimatesIds.value.includes(planet.climate.id));
+      return planetsArray.value.filter(planet => checkedClimatesIds.value.includes(planet.climate.id));
     }
     else if (checkedClimatesIds.value.length === 0 && checkedJourneyTypesIds.value.length !== 0) {
-      return planets.value.filter(planet => planet.journeyTypes.some(journeyType => checkedJourneyTypesIds.value.includes(journeyType.id)));
+      return planetsArray.value.filter(planet => planet.journeyTypes.some(journeyType => checkedJourneyTypesIds.value.includes(journeyType.id)));
     }
     else {
-      return planets.value.filter(planet => 
+      return planetsArray.value.filter(planet => 
         checkedClimatesIds.value.includes(planet.climate.id) 
         && planet.journeyTypes.some(journeyType => checkedJourneyTypesIds.value.includes(journeyType.id))
       );
