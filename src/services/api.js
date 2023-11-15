@@ -9,8 +9,8 @@ export const getPlanet = async (id) => {
   return api (`/planets/${id}`, { method: 'GET' });
 }
 
-export const getShip = async (id) => {
-  return api(`/ships/${id}`, { method: 'GET' });
+export const getShips = async () => {
+  return api(`/ships`, { method: 'GET' });
 }
 
 export const getClimates = async () => {
