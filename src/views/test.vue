@@ -34,7 +34,7 @@ const displayLogin = ref(true);
 
             <form action="" v-else="!displayLogin">
                 <div class="container-signin">
-                    <div class="container-signin-paired">
+                    <div class="container-form-up">
                         <div class="container-input-signin">
                             <label for="firstname">Prénom :</label>
                             <input type="text" id="firstname" placeholder="Hector">
@@ -45,21 +45,20 @@ const displayLogin = ref(true);
                             <label for="lastname">Nom :</label>
                             <input type="text" id="lastname" placeholder="Lilas">
                         </div>
+                        <div class="container-form-middle">
+                            <div class="container-input-signin">
+                                <label for="email">Email :</label>
+                                <input type="email" id="email" placeholder="myemail@mail.com">
+                            </div>
+                            <div class="lign-form-middle">
+                            </div>
+                            <div class="container-input-signin">
+                                <label for="confEmail">Confirmation de l'email :</label>
+                                <input type="email" id="confEmail" placeholder="myemail@mail.com">
+                            </div>
+                        </div>
                     </div>
-                    <div class="container-signin-paired">
-                        <div class="container-input-signin">
-                            <label for="email">Email :</label>
-                            <input type="email" id="email" placeholder="myemail@mail.com">
-                        </div>
-                        <div class="lign-form-middle">
-                        </div>
-                        <div class="container-input-signin">
-                            <label for="confEmail">Confirmation de l'email :</label>
-                            <input type="email" id="confEmail" placeholder="myemail@mail.com">
-                        </div>
-                    </div>
-
-                    <div class="container-signin-paired">
+                    <div class="container-form-low">
                         <div class="container-input-signin">
                             <label for="password">Mot de passe :</label>
                             <input type="password" id="password" placeholder="**********">
@@ -100,8 +99,8 @@ main {
     align-items: center;
     width: 80%;
     border: 1px solid $color-light;
-    border-radius: 1rem;
-    margin-top: 2rem;
+    border-radius: 1%;
+    margin-top: 5%;
     background-color: $color-dark-blue2;
 }
 
@@ -109,8 +108,8 @@ main {
     display: flex;
     flex-direction: row;
     width: 80%;
-    margin-top: 7rem;
-    margin-bottom: 7rem;
+    margin-top: 10%;
+    margin-bottom: 10%;
 
     .btn.connexion {
         border-radius: 0.3rem 0 0 0.3rem;
@@ -120,6 +119,10 @@ main {
     .btn.inscription {
         border-radius: 0 0.3rem 0.3rem 0;
         text-align: center;
+    }
+
+    @media (width <=$sm-breakpoint) {
+        margin-bottom: 20%;
     }
 }
 
@@ -155,21 +158,30 @@ input[type="radio"].btn:checked+label {
 
 .container-signin {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     width: 100%;
 
-    @media (width <=$sm-breakpoint) {
-        align-items: flex-end;
-    }
-}
-
-.container-signin-paired {
-    display: flex;
-
-    @media (width <=$sm-breakpoint) {
+    .container-form-left {
+        display: flex;
         flex-direction: column;
-        align-items: flex-start
+        align-items: flex-end;
+        width: 40%;
+        margin-right: 10%;
+    }
+
+    .lign-form-middle {
+        height: 18rem;
+        border-left: 2px solid $color-light;
+        margin-bottom: 1rem;
+    }
+
+    .container-form-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 40%;
+        margin-left: 10%;
     }
 }
 
@@ -177,10 +189,10 @@ input[type="radio"].btn:checked+label {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 5rem;
+    margin-bottom: 30%;
 
     label {
-        margin-bottom: 1rem;
+        margin-bottom: 5%;
         color: $color-light;
 
         @media (width <=$lg-breakpoint ) {
@@ -207,14 +219,10 @@ input[type="radio"].btn:checked+label {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-
-    @media (width <=$sm-breakpoint) {
-        margin-right: 0;
-        margin-bottom: 2rem;
-    }
+    margin-bottom: 10%;
 
     label {
-        margin-bottom: 1rem;
+        margin-bottom: 5%;
         color: $color-light;
 
         @media (min-width: $lg-breakpoint ) {
@@ -229,8 +237,8 @@ input[type="radio"].btn:checked+label {
         padding-left: 1rem;
 
         @media (width <=$sm-breakpoint) {
-            width: 25rem;
-            padding: 0.5rem;
+            width: 15rem;
+            padding: 1rem;
             font-size: 1.5rem;
         }
 
@@ -253,14 +261,14 @@ input:focus {
     outline: none;
 }
 
-// input[type="submit"] {
-//     width: 24%;
-//     margin-left: 38%;
-//     margin-top: 2%;
-//     margin-bottom: 7%;
-//     padding: 1rem;
-//     font-size: 2rem;
-// }
+input[type="submit"] {
+    width: 24%;
+    margin-left: 38%;
+    margin-top: 2%;
+    margin-bottom: 7%;
+    padding: 1rem;
+    font-size: 2rem;
+}
 
 // @media (width <= $sm-breakpoint) {
 
