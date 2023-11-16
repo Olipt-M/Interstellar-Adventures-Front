@@ -89,7 +89,7 @@
       <h2 class="title-2">Choisissez votre vaisseau</h2>
         <div class="ships-flex-container">
           <div class="ship-container" v-for="ship in filteredships" :key="ship.id" :value="ship.id">
-            <p class="class">{{ ship.name }}</p>
+            <p class="ship-name" v-if="selectedJourneyType === 1">{{ ship.name }} - {{ ship.journeyTypes.base_price * ship.coeff_price }}</p>
             <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name">
           </div>
         </div>
@@ -98,7 +98,7 @@
     <div>
       <RouterLink to="/recap">
         <MainButton class="main-button">
-          <span>Valider</span>
+          Valider
         </MainButton>
       </RouterLink>
     </div>
@@ -121,7 +121,7 @@
     text-align: justify;
   }
 
-  .description-container p{
+  .description-container p {
     line-height: 1.7;
   }
   .hr-1 {
@@ -202,28 +202,15 @@
     align-items: center;
   }
 
-  .ship-container,
-  .ships-img-container-eco, 
-  .ships-img-container-standard, 
-  .ships-img-container-premium {
-
-      flex-basis: 30%;
-      margin: 4rem 2rem 4rem 2rem; 
-
-      @media (max-width: $lg-breakpoint) {
-        flex-basis: 100%;
-      }
-
-      @media (max-width: $md-breakpoint) {
-        flex-basis: 100%;
-      }
-
-      @media (max-width: $sm-breakpoint) {
-        flex-basis: 100%;
-      }
+  .ship-container {
+      margin: 4rem 2rem 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
   
-  .class{
+  .ship-name{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -231,11 +218,12 @@
     color: $color-light;
   }
 
-  .ship-container img,
-  .ships-img-container-eco img, 
-  .ships-img-container-standard img, 
-  .ships-img-container-premium img{
+  .ship-container img {
     border-radius: 0.5rem;
+    $img-width: 400px;
+    width: $img-width;
+    height: calc($img-width * 9/16);
+
     &:hover {
       transform: scale(1.03);
       box-shadow: 0 0 1rem $color-light;
