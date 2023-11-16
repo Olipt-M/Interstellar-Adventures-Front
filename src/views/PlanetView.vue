@@ -8,7 +8,6 @@
   const planet = ref(undefined);
   const ships = ref(undefined);
   const selectedJourneyType = ref(null);
-  const selectedShip = ref(null);
   const departureDate = ref(null);
   const returnDate = ref(null);
 
@@ -35,6 +34,16 @@
   getShips()
     .then(response => ships.value = response)
     .catch(error => console.error(error));
+
+  // Filter ships
+  const filteredships = computed(() => {
+    console.log(selectedJourneyType.value);
+    if (selectedJourneyType.value === null) {
+      return ships.value;
+    } else {
+      return ships.value.filter(ship => ship.journey_type_id === selectedJourneyType.value);
+    }
+  });
 </script>
 
 <template>
@@ -60,7 +69,7 @@
 
     <section class="journey-types-container">
       <h2 class="title-1">Choisissez un type de voyage</h2>
-      <select v-model="selectedJourneyType" @change="handleJourneyTypeChange">
+      <select v-model="selectedJourneyType">
         <option v-for="journeyType in planet.journeyTypes" :key="journeyType.id" :value="journeyType.id">
           {{ journeyType.name }}
         </option>
@@ -80,16 +89,8 @@
     <section class="ships-container">
       <h2 class="title-2">Choisissez votre vaisseau</h2>
         <div class="ships-flex-container">
-          <div class="ships-img-container-eco" v-for="ship in ships" :key="ship.id" :value="ship.id">
-            <p class="class">Classe Économique</p>
-            <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name">
-          </div>
-          <div class="ships-img-container-standard" v-for="ship in ships" :key="ship.id" :value="ship.id">
-            <p class="class">Classe Standard</p>
-                <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name">
-          </div>
-          <div class="ships-img-container-premium" v-for="ship in ships" :key="ship.id" :value="ship.id">
-            <p class="class">Classe Premium</p>
+          <div class="ship-container" v-for="ship in filteredships" :key="ship.id" :value="ship.id">
+            <p class="class">{{ ship.name }}</p>
             <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name">
           </div>
         </div>
@@ -201,6 +202,8 @@
     justify-content: center;
     align-items: center;
   }
+
+  .ship-container,
   .ships-img-container-eco, 
   .ships-img-container-standard, 
   .ships-img-container-premium {
@@ -229,6 +232,7 @@
     color: $color-light;
   }
 
+  .ship-container img,
   .ships-img-container-eco img, 
   .ships-img-container-standard img, 
   .ships-img-container-premium img{
@@ -239,7 +243,5 @@
       transition: transform 0.3s ease-in-out;
       cursor: pointer;
     }
-  } 
-  
-
+  }
 </style>
