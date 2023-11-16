@@ -58,10 +58,10 @@
 </script>
 
 <template>
-  <main>
-    <H1TitleLayout>{{ planet.name }}</H1TitleLayout>
+  <H1TitleLayout>{{ planet.name }}</H1TitleLayout>
 
-    <section class="container">
+  <main class="container">
+    <section>
       <div class="img-container">
         <img :src="`../img-planetes/${planet.picture}`" :alt="planet.name">
       </div>
@@ -112,7 +112,7 @@
 
     <div>
       <RouterLink to="/recap">
-        <MainButton class="main-button">
+        <MainButton colorMode="light" class="main-button">
           Valider
         </MainButton>
       </RouterLink>
@@ -121,13 +121,13 @@
 </template>
 
 <style lang='scss' scoped>
+  $shipImgWidth: 400px;
 
-  .main-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0rem auto 5rem auto;
-    width: 25%;
+  main {
+    margin: 3rem auto;
+    background: $color-dark-blue2;
+    border-radius: 1rem;
+    max-width: calc(3.5 * $shipImgWidth);
   }
 
   .description-container {
@@ -150,12 +150,16 @@
   .img-container {
     width: 100%;
     margin: 3rem 0 1.5rem 0;
+
+    img {
+      border-radius: 1rem 1rem 0 0;
+    }
   }
   .title-1 {
     text-align: center;
     margin-bottom: 2.5rem;
     color: $color-light;
-    background-color: $color-dark-blue2;
+    background-color: $color-dark-blue1;
     border: 1px solid $color-light;
     padding: 1rem;
     border-radius: 1rem;
@@ -163,7 +167,7 @@
   }
   .title-2 {
   margin: 4.5rem auto 1rem auto;
-  background-color: $color-dark-blue2;
+  background-color: $color-dark-blue1;
   color: $color-light;
   border: 1px solid $color-light;
   padding: 1rem;
@@ -215,6 +219,7 @@
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    margin: 3rem auto 7rem;
   }
 
   .ship-container {
@@ -239,9 +244,8 @@
 
   .ship-container img {
     border-radius: 0.5rem;
-    $img-width: 400px;
-    width: $img-width;
-    height: calc($img-width * 9/16);
+    width: $shipImgWidth;
+    height: calc($shipImgWidth * 9/16);
 
     &:hover {
       transform: scale(1.03);
@@ -249,5 +253,13 @@
       transition: transform 0.3s ease-in-out;
       cursor: pointer;
     }
+  }
+  
+  .main-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0rem auto 5rem auto;
+    width: 25%;
   }
 </style>
