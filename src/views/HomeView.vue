@@ -20,8 +20,8 @@
   p {
     text-align: center;
     color: $color-light;
-    padding: 3rem;
-    margin: 0;
+    padding: 2rem;
+    margin: 2rem 0 1.5rem 0;
   }
   
 </style>
