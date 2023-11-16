@@ -15,9 +15,8 @@ setup() {
     const planets = ref([]);
     onBeforeMount(async () => {
       try {
-        const response = await getPlanets();
-        planets.value = response.data;
-        console.log(planets.value);
+        const response = await getPlanets(1, 23);
+        planets.value = [...response.data].sort(() => Math.random() - 0.5).slice(0, 5); // [...] permet de créer une copie de la liste sans toucher à l'odre initial des planètes 
       } catch (error) {
         console.error('Erreur lors de la récupération des données des planètes :', error);
       }
@@ -30,7 +29,7 @@ setup() {
 
 <template>
   <div>
-    <carousel :autoplay="3000" :items-to-show="1">
+    <carousel :autoplay="2500" :items-to-show="1">
       <slide v-for="planet in planets" :key="planet.id">
         <img :src="`img-planetes/${planet.picture}`" :alt="planet.name">
       </slide>
@@ -43,7 +42,7 @@ setup() {
 </template>
 
 
-<style scoped>
+<style lang="scss">
 .carousel__item {
   min-height: 500px;
   width: 100%;
@@ -57,6 +56,21 @@ setup() {
 
 }
 
+.carousel__pagination-item{
+  margin-bottom: 3rem;
+}
+
+.carousel__pagination{
+  margin: 0;
+  padding: 0;
+}
+
+img{
+  width: 100vw;
+  height: 80vh;
+  object-fit: cover;
+}
+
 .carousel__slide {
   padding: 0px;
 }
@@ -64,6 +78,10 @@ setup() {
 .carousel__prev,
 .carousel__next {
   box-sizing: content-box;
-  border: 5px solid white;
+  color: $color-light;
+  &:hover{
+    color: $color-light;
+  }
+
 }
 </style>

@@ -8,6 +8,7 @@
   const planet = ref(undefined);
   const ships = ref(undefined);
   const selectedJourneyType = ref(null);
+  const selectedShip = ref(null);
   const departureDate = ref(null);
   const returnDate = ref(null);
 
@@ -29,6 +30,21 @@
 
   getPlanet(planetId.value)
     .then(response => planet.value = response)
+    .catch(error => console.error(error));
+
+
+  onMounted(async () => {
+    try {
+      const planetId = route.params.id;
+      const response = await getPlanet(planetId);
+      planet.value = response;
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
+  getJourneyTypes()
+    .then(response => journeyTypes.value = response)
     .catch(error => console.error(error));
 
   getShips()
