@@ -49,7 +49,7 @@
       // .then(() => console.log(planetsArray.value))
       .catch(error => console.error(error));
       isViewLoaded.value = true;
-    }, "1500");
+    }, "1000");
   }
 
   // Filter planets

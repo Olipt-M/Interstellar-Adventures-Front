@@ -3,14 +3,14 @@
   import H1TitleLayout from '@/components/layouts/H1TitleLayout.vue';
   import MainButton from '@/components/buttons/MainButton.vue';
   import { getPlanet, getJourneyTypes, getShips } from '@/services/api.js';
-  import { ref, onMounted } from 'vue';
+  import { ref } from 'vue';
 
   const route = useRoute();
   const planet = ref(undefined);
   const journeyTypes = ref(undefined);
   const ships = ref(undefined);
   const selectedJourneyType = ref(null);
-  const selectedShip = ref(null);
+  // const selectedShip = ref(null);
   const departureDate = ref(null);
   const returnDate = ref(null);
 
@@ -31,15 +31,15 @@
     .catch(error => console.error(error));
 
 
-  onMounted(async () => {
-    try {
-      const planetId = route.params.id;
-      const response = await getPlanet(planetId);
-      planet.value = response;
-    } catch (error) {
-      console.error(error);
-    }
-  });
+  // onMounted(async () => {
+  //   try {
+  //     const planetId = route.params.id;
+  //     const response = await getPlanet(planetId);
+  //     planet.value = response;
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // });
 
   getJourneyTypes()
     .then(response => journeyTypes.value = response)
