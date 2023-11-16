@@ -37,7 +37,6 @@
 
   // Filter ships
   const filteredships = computed(() => {
-    console.log(selectedJourneyType.value);
     if (selectedJourneyType.value === null) {
       return ships.value;
     } else {
