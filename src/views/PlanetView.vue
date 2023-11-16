@@ -10,6 +10,18 @@
   const selectedJourneyType = ref(null);
   const departureDate = ref(null);
   const returnDate = ref(null);
+  const journeyDuration = computed(() => {
+    if (departureDate.value === null || returnDate.value === null) {
+      return null;
+    } else {
+      return returnDate.value - departureDate.value;
+      // const date1 = new Date(departureDate.value);
+      // const date2 = new Date(returnDate.value);
+      // const diffTime = Math.abs(date2 - date1);
+      // const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      // return diffDays;
+    }
+  });
 
   const getCurrentDate = () => {
     const today = new Date();
@@ -89,7 +101,10 @@
       <h2 class="title-2">Choisissez votre vaisseau</h2>
         <div class="ships-flex-container">
           <div class="ship-container" v-for="ship in filteredships" :key="ship.id" :value="ship.id">
-            <p class="ship-name" v-if="selectedJourneyType === 1">{{ ship.name }} - {{ ship.journeyTypes.base_price * ship.coeff_price }}</p>
+            <p class="ship-name">{{ ship.name }}</p>
+            <p class="price" v-if="selectedJourneyType === 1">Prix du voyage : {{ planet.journeyTypes.find(type => type.id === selectedJourneyType).base_price * ship.coeff_price }} €</p>
+            <p class="price" v-else-if="selectedJourneyType === 2">Prix du voyage : {{ departureDate }} €</p>
+            <p class="price" v-else-if="selectedJourneyType === 3">Prix du voyage : {{ planet.journeyTypes.find(type => type.id === selectedJourneyType).base_price * ship.coeff_price }} €</p>
             <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name">
           </div>
         </div>
@@ -215,6 +230,10 @@
     justify-content: center;
     align-items: center;
     margin: 0 0 1rem 0;
+    color: $color-light;
+  }
+
+  .price {
     color: $color-light;
   }
 
