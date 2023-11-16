@@ -14,7 +14,7 @@
   const climates = ref(undefined);
   const journeyTypes = ref(undefined);
   const page = ref(1);
-  const maxPlanetsAtOnce = ref(5);
+  const maxPlanetsAtOnce = ref(10);
   const nbOfPlanets = ref(undefined);
 
   onBeforeMount(() => {

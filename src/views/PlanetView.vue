@@ -2,12 +2,10 @@
   import { useRoute, RouterLink } from 'vue-router';
   import H1TitleLayout from '@/components/layouts/H1TitleLayout.vue';
   import MainButton from '@/components/buttons/MainButton.vue';
-  import { getPlanet, getJourneyTypes, getShips } from '@/services/api.js';
-  import { ref, onMounted } from 'vue';
+  import { getPlanet, getShips } from '@/services/api.js';
+  import { ref, computed } from 'vue';
 
-  const route = useRoute();
   const planet = ref(undefined);
-  const journeyTypes = ref(undefined);
   const ships = ref(undefined);
   const selectedJourneyType = ref(null);
   const selectedShip = ref(null);
@@ -26,37 +24,24 @@
     return `${year}-${month}-${day}`;
   };
 
-  getPlanet(route.params.id)
-    .then(response => planet.value = response)
-    .catch(error => console.error(error));
-
-
-  onMounted(async () => {
-    try {
-      const planetId = route.params.id;
-      const response = await getPlanet(planetId);
-      planet.value = response;
-    } catch (error) {
-      console.error(error);
-    }
+  const planetId = computed(() => {
+    return useRoute().params.id;
   });
 
-  getJourneyTypes()
-    .then(response => journeyTypes.value = response)
+  getPlanet(planetId.value)
+    .then(response => planet.value = response)
     .catch(error => console.error(error));
 
   getShips()
     .then(response => ships.value = response)
     .catch(error => console.error(error));
-
-
 </script>
 
 <template>
-  <div>
+  <main>
     <H1TitleLayout>{{ planet.name }}</H1TitleLayout>
 
-    <div class="container">
+    <section class="container">
       <div class="img-container">
         <img :src="`../img-planetes/${planet.picture}`" :alt="planet.name">
       </div>
@@ -69,14 +54,14 @@
         Atque reprehenderit cumque necessitatibus nobis itaque placeat magni animi. Error ipsam magnam exercitationem unde tenetur distinctio architecto quod beatae animi officiis. Facere eius sint aspernatur facilis id? Animi, repellendus ut?
         </p>
       </div>
-    </div>
+    </section>
 
     <hr class="hr-1">
 
-    <div class="journey-types-container">
+    <section class="journey-types-container">
       <h2 class="title-1">Choisissez un type de voyage</h2>
       <select v-model="selectedJourneyType" @change="handleJourneyTypeChange">
-        <option v-for="journeyType in journeyTypes" :key="journeyType.id" :value="journeyType.id">
+        <option v-for="journeyType in planet.journeyTypes" :key="journeyType.id" :value="journeyType.id">
           {{ journeyType.name }}
         </option>
       </select>
@@ -88,11 +73,11 @@
         <label for="returnDate" v-if="selectedJourneyType !== 3" >Date de retour:</label>
         <input type="date" v-if="selectedJourneyType !== 3" v-model="returnDate" :min="departureDate">
       </div>
-    </div>
+    </section>
 
     <hr class="hr-2">
 
-    <div class="ships-container">
+    <section class="ships-container">
       <h2 class="title-2">Choisissez votre vaisseau</h2>
         <div class="ships-flex-container">
           <div class="ships-img-container-eco" v-for="ship in ships" :key="ship.id" :value="ship.id">
@@ -108,7 +93,8 @@
             <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name">
           </div>
         </div>
-    </div>
+    </section>
+
     <div>
       <RouterLink to="/recap">
         <MainButton class="main-button">
@@ -116,9 +102,7 @@
         </MainButton>
       </RouterLink>
     </div>
-  </div>
-
-  
+  </main>  
 </template>
 
 <style lang='scss' scoped>
