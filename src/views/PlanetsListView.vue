@@ -14,8 +14,10 @@
   const climates = ref(undefined);
   const journeyTypes = ref(undefined);
   const page = ref(1);
-  const maxPlanetsAtOnce = ref(5);
+  const maxPlanetsAtOnce = ref(10);
   const nbOfPlanets = ref(undefined);
+  const checkedClimatesIds = ref([]);
+  const checkedJourneyTypesIds = ref([]);
 
   onBeforeMount(() => {
     // getNbOfPlanets().then(response => nbOfPlanets.value = response);
@@ -53,27 +55,6 @@
   }
 
   // Filter planets
-  // Fill the filter tables
-  const checkedClimatesIds = ref([]);
-  const checkedJourneyTypesIds = ref([]);
-
-  const filterClimates = (id) => {
-    if (checkedClimatesIds.value.indexOf(id) === -1) {
-      checkedClimatesIds.value.push(id);
-    } else {
-      checkedClimatesIds.value.splice(checkedClimatesIds.value.indexOf(id), 1);
-    }
-  };
-
-  const filterJourneyTypes = (id) => {
-    if (checkedJourneyTypesIds.value.indexOf(id) === -1) {
-      checkedJourneyTypesIds.value.push(id);
-    } else {
-      checkedJourneyTypesIds.value.splice(checkedJourneyTypesIds.value.indexOf(id), 1);
-    }
-  };
-
-  // Apply the filters
   const filteredPlanets = computed(() => {
     if (checkedClimatesIds.value.length === 0 && checkedJourneyTypesIds.value.length === 0) {
       return planetsArray.value;
@@ -107,7 +88,7 @@
             name="journeyTypeId"
             :value="journeyType.id"
             :id="journeyType.name"
-            @change="filterJourneyTypes(journeyType.id)"
+            v-model="checkedJourneyTypesIds"
           >
           <label :for="journeyType.name">{{ journeyType.name }}</label>
         </div>
@@ -122,7 +103,7 @@
             name="climateId"
             :value="climate.id"
             :id="climate.name"
-            @change="filterClimates(climate.id)"
+            v-model="checkedClimatesIds"
           >
           <label :for="climate.name">{{ climate.name }}</label>
         </div>

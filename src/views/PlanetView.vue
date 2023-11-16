@@ -2,15 +2,13 @@
   import { useRoute, RouterLink } from 'vue-router';
   import H1TitleLayout from '@/components/layouts/H1TitleLayout.vue';
   import MainButton from '@/components/buttons/MainButton.vue';
-  import { getPlanet, getJourneyTypes, getShips } from '@/services/api.js';
-  import { ref } from 'vue';
+  import { getPlanet, getShips } from '@/services/api.js';
+  import { ref, computed } from 'vue';
 
-  const route = useRoute();
   const planet = ref(undefined);
-  const journeyTypes = ref(undefined);
   const ships = ref(undefined);
   const selectedJourneyType = ref(null);
-  // const selectedShip = ref(null);
+  const selectedShip = ref(null);
   const departureDate = ref(null);
   const returnDate = ref(null);
 
@@ -26,20 +24,24 @@
     return `${year}-${month}-${day}`;
   };
 
-  getPlanet(route.params.id)
+  const planetId = computed(() => {
+    return useRoute().params.id;
+  });
+
+  getPlanet(planetId.value)
     .then(response => planet.value = response)
     .catch(error => console.error(error));
 
 
-  // onMounted(async () => {
-  //   try {
-  //     const planetId = route.params.id;
-  //     const response = await getPlanet(planetId);
-  //     planet.value = response;
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // });
+  onMounted(async () => {
+    try {
+      const planetId = route.params.id;
+      const response = await getPlanet(planetId);
+      planet.value = response;
+    } catch (error) {
+      console.error(error);
+    }
+  });
 
   getJourneyTypes()
     .then(response => journeyTypes.value = response)
@@ -49,14 +51,21 @@
     .then(response => ships.value = response)
     .catch(error => console.error(error));
 
-
+  // Filter ships
+  const filteredships = computed(() => {
+    if (selectedJourneyType.value === null) {
+      return ships.value;
+    } else {
+      return ships.value.filter(ship => ship.journey_type_id === selectedJourneyType.value);
+    }
+  });
 </script>
 
 <template>
-  <div>
+  <main>
     <H1TitleLayout>{{ planet.name }}</H1TitleLayout>
 
-    <div class="container">
+    <section class="container">
       <div class="img-container">
         <img :src="`../img-planetes/${planet.picture}`" :alt="planet.name">
       </div>
@@ -69,14 +78,14 @@
         Atque reprehenderit cumque necessitatibus nobis itaque placeat magni animi. Error ipsam magnam exercitationem unde tenetur distinctio architecto quod beatae animi officiis. Facere eius sint aspernatur facilis id? Animi, repellendus ut?
         </p>
       </div>
-    </div>
+    </section>
 
     <hr class="hr-1">
 
-    <div class="journey-types-container">
+    <section class="journey-types-container">
       <h2 class="title-1">Choisissez un type de voyage</h2>
-      <select v-model="selectedJourneyType" @change="handleJourneyTypeChange">
-        <option v-for="journeyType in journeyTypes" :key="journeyType.id" :value="journeyType.id">
+      <select v-model="selectedJourneyType">
+        <option v-for="journeyType in planet.journeyTypes" :key="journeyType.id" :value="journeyType.id">
           {{ journeyType.name }}
         </option>
       </select>
@@ -88,27 +97,20 @@
         <label for="returnDate" v-if="selectedJourneyType !== 3" >Date de retour:</label>
         <input type="date" v-if="selectedJourneyType !== 3" v-model="returnDate" :min="departureDate">
       </div>
-    </div>
+    </section>
 
     <hr class="hr-2">
 
-    <div class="ships-container">
+    <section class="ships-container">
       <h2 class="title-2">Choisissez votre vaisseau</h2>
         <div class="ships-flex-container">
-          <div class="ships-img-container-eco" v-for="ship in ships" :key="ship.id" :value="ship.id">
-            <p class="class">Classe Économique</p>
-            <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name">
-          </div>
-          <div class="ships-img-container-standard" v-for="ship in ships" :key="ship.id" :value="ship.id">
-            <p class="class">Classe Standard</p>
-                <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name">
-          </div>
-          <div class="ships-img-container-premium" v-for="ship in ships" :key="ship.id" :value="ship.id">
-            <p class="class">Classe Premium</p>
+          <div class="ship-container" v-for="ship in filteredships" :key="ship.id" :value="ship.id">
+            <p class="class">{{ ship.name }}</p>
             <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name">
           </div>
         </div>
-    </div>
+    </section>
+
     <div>
       <RouterLink to="/recap">
         <MainButton class="main-button">
@@ -116,9 +118,7 @@
         </MainButton>
       </RouterLink>
     </div>
-  </div>
-
-  
+  </main>  
 </template>
 
 <style lang='scss' scoped>
@@ -217,6 +217,8 @@
     justify-content: center;
     align-items: center;
   }
+
+  .ship-container,
   .ships-img-container-eco, 
   .ships-img-container-standard, 
   .ships-img-container-premium {
@@ -245,6 +247,7 @@
     color: $color-light;
   }
 
+  .ship-container img,
   .ships-img-container-eco img, 
   .ships-img-container-standard img, 
   .ships-img-container-premium img{
@@ -255,7 +258,5 @@
       transition: transform 0.3s ease-in-out;
       cursor: pointer;
     }
-  } 
-  
-
+  }
 </style>
