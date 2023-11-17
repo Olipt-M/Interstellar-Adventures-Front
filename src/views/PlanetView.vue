@@ -60,71 +60,82 @@
 <template>
   <H1TitleLayout>{{ planet.name }}</H1TitleLayout>
 
-  <main class="container">
-    <section>
-      <div class="img-container">
-        <img :src="`../img-planetes/${planet.picture}`" :alt="planet.name">
-      </div>
-      <div class="description-container">
-        <p>{{ planet.system }}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, accusamus excepturi sed mollitia quae fugit facere labore rem ipsam quam soluta incidunt voluptatibus quos obcaecati ipsum sapiente nihil suscipit! Dolorum?
-        Et velit dolore recusandae? Modi maiores quaerat quos unde dolore asperiores adipisci, nisi minus culpa iure quibusdam. Enim tempore fuga dolor saepe quisquam molestias dicta! In, ab mollitia! Recusandae, in?
-        Alias impedit perspiciatis sequi veritatis sapiente dolorum est similique quibusdam architecto assumenda aut quam voluptatum facilis tempora tempore, quod ab aspernatur delectus numquam non! Laborum deserunt quo suscipit repellat. Amet!
-        Molestiae, voluptas minima velit at necessitatibus ut dolores exercitationem ipsa placeat magnam. Ipsam cumque earum ratione. Dolorem reprehenderit ut iure quas, temporibus a? Incidunt aspernatur alias aliquam sed nemo accusantium?
-        Atque reprehenderit cumque necessitatibus nobis itaque placeat magni animi. Error ipsam magnam exercitationem unde tenetur distinctio architecto quod beatae animi officiis. Facere eius sint aspernatur facilis id? Animi, repellendus ut?
-        </p>
-      </div>
-    </section>
-
-    <hr class="hr-1">
-
-    <section class="journey-types-container">
-      <h2 class="title-1">Choisissez un type de voyage</h2>
-      <select v-model="selectedJourneyType">
-        <option v-for="journeyType in planet.journeyTypes" :key="journeyType.id" :value="journeyType.id">
-          {{ journeyType.name }}
-        </option>
-      </select>
-
-      <div class="form-group">
-        <label for="departureDate">Date de départ:</label>
-        <input type="date" v-model="departureDate" :min="getCurrentDate()">
-
-        <label for="returnDate" v-if="selectedJourneyType !== 3" >Date de retour:</label>
-        <input type="date" v-if="selectedJourneyType !== 3" v-model="returnDate" :min="departureDate">
-      </div>
-    </section>
-
-    <hr class="hr-2">
-
-    <section class="ships-container">
-      <h2 class="title-2">Choisissez votre vaisseau</h2>
-        <div class="ships-flex-container">
-          <div class="ship-container" v-for="ship in filteredships" :key="ship.id" :value="ship.id">
-            <p class="ship-name">{{ ship.name }}</p>
-            <p class="price" v-if="selectedJourneyType === 1">Prix du voyage : {{ planet.journeyTypes.find(type => type.id === selectedJourneyType).base_price * ship.coeff_price }} €</p>
-            <p class="price" v-else-if="selectedJourneyType === 2">Prix du voyage : {{ departureDate }} €</p>
-            <p class="price" v-else-if="selectedJourneyType === 3">Prix du voyage : {{ planet.journeyTypes.find(type => type.id === selectedJourneyType).base_price * ship.coeff_price }} €</p>
-            <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name">
-          </div>
+  <div class="container">
+    <main>
+      <section>
+        <div class="img-container">
+          <img :src="`../img-planetes/${planet.picture}`" :alt="planet.name">
         </div>
-    </section>
+        <div class="description-container">
+          <p>{{ planet.system }}
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, accusamus excepturi sed mollitia quae fugit facere labore rem ipsam quam soluta incidunt voluptatibus quos obcaecati ipsum sapiente nihil suscipit! Dolorum?
+          Et velit dolore recusandae? Modi maiores quaerat quos unde dolore asperiores adipisci, nisi minus culpa iure quibusdam. Enim tempore fuga dolor saepe quisquam molestias dicta! In, ab mollitia! Recusandae, in?
+          Alias impedit perspiciatis sequi veritatis sapiente dolorum est similique quibusdam architecto assumenda aut quam voluptatum facilis tempora tempore, quod ab aspernatur delectus numquam non! Laborum deserunt quo suscipit repellat. Amet!
+          Molestiae, voluptas minima velit at necessitatibus ut dolores exercitationem ipsa placeat magnam. Ipsam cumque earum ratione. Dolorem reprehenderit ut iure quas, temporibus a? Incidunt aspernatur alias aliquam sed nemo accusantium?
+          Atque reprehenderit cumque necessitatibus nobis itaque placeat magni animi. Error ipsam magnam exercitationem unde tenetur distinctio architecto quod beatae animi officiis. Facere eius sint aspernatur facilis id? Animi, repellendus ut?
+          </p>
+        </div>
+      </section>
 
-    <div>
-      <RouterLink to="/recap">
-        <MainButton colorMode="light" class="main-button">
-          Valider
-        </MainButton>
-      </RouterLink>
-    </div>
-  </main>  
+      <hr class="hr-1">
+
+      <section class="journey-types-container">
+        <h2 class="title-1">Choisissez un type de voyage</h2>
+        <select v-model="selectedJourneyType">
+          <option v-for="journeyType in planet.journeyTypes" :key="journeyType.id" :value="journeyType.id">
+            {{ journeyType.name }}
+          </option>
+        </select>
+
+        <div class="form-group">
+          <label for="departureDate">Date de départ:</label>
+          <input type="date" v-model="departureDate" :min="getCurrentDate()">
+
+          <label for="returnDate" v-if="selectedJourneyType !== 3" >Date de retour:</label>
+          <input type="date" v-if="selectedJourneyType !== 3" v-model="returnDate" :min="departureDate">
+        </div>
+      </section>
+
+      <hr class="hr-2">
+
+      <section class="ships-container">
+        <h2 class="title-2">Choisissez votre vaisseau</h2>
+          <div class="ships-flex-container">
+            <div class="ship-container" v-for="ship in filteredships" :key="ship.id" :value="ship.id">
+              <p class="ship-name">{{ ship.name }}</p>
+              <p class="price" v-if="selectedJourneyType === 1">Prix du voyage : {{ planet.journeyTypes.find(type => type.id === selectedJourneyType).base_price * ship.coeff_price }} €</p>
+              <p class="price" v-else-if="selectedJourneyType === 2">Prix du voyage : {{ departureDate }} €</p>
+              <p class="price" v-else-if="selectedJourneyType === 3">Prix du voyage : {{ planet.journeyTypes.find(type => type.id === selectedJourneyType).base_price * ship.coeff_price }} €</p>
+              <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name">
+            </div>
+          </div>
+      </section>
+
+      <div>
+        <RouterLink to="/recap">
+          <MainButton colorMode="light" class="main-button">
+            Valider
+          </MainButton>
+        </RouterLink>
+      </div>
+    </main>
+  </div>
 </template>
 
 <style lang='scss' scoped>
   $shipImgWidth: 400px;
 
+  .container {
+    display: flex;
+    justify-content: center;
+    margin: 3rem;
+
+    @media (max-width: $sm-breakpoint) {
+      margin: 3rem 0;
+    }
+  }
+
   main {
-    margin: 3rem auto;
     background: $color-dark-blue2;
     border-radius: 1rem;
     max-width: calc(3.5 * $shipImgWidth);
@@ -149,7 +160,7 @@
   }
   .img-container {
     width: 100%;
-    margin: 3rem 0 1.5rem 0;
+    margin-bottom: 1.5rem;
 
     img {
       border-radius: 1rem 1rem 0 0;
@@ -228,6 +239,10 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
+
+      @media (max-width: $sm-breakpoint) {
+        margin: 4rem 0 0;
+      }
     }
   
   .ship-name{
@@ -248,10 +263,14 @@
     height: calc($shipImgWidth * 9/16);
 
     &:hover {
-      transform: scale(1.03);
       box-shadow: 0 0 1rem $color-light;
+      transform: scale(1.03);
       transition: transform 0.3s ease-in-out;
       cursor: pointer;
+
+      @media (max-width: $sm-breakpoint) {
+        transform: scale(1);
+      }
     }
   }
   
@@ -259,7 +278,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0rem auto 5rem auto;
+    margin: 2rem auto 7rem auto;
     width: 25%;
   }
 </style>
