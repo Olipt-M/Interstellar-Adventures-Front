@@ -67,13 +67,20 @@
           <img :src="`../img-planetes/${planet.picture}`" :alt="planet.name">
         </div>
         <div class="description-container">
-          <p>{{ planet.system }}
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, accusamus excepturi sed mollitia quae fugit facere labore rem ipsam quam soluta incidunt voluptatibus quos obcaecati ipsum sapiente nihil suscipit! Dolorum?
-          Et velit dolore recusandae? Modi maiores quaerat quos unde dolore asperiores adipisci, nisi minus culpa iure quibusdam. Enim tempore fuga dolor saepe quisquam molestias dicta! In, ab mollitia! Recusandae, in?
-          Alias impedit perspiciatis sequi veritatis sapiente dolorum est similique quibusdam architecto assumenda aut quam voluptatum facilis tempora tempore, quod ab aspernatur delectus numquam non! Laborum deserunt quo suscipit repellat. Amet!
-          Molestiae, voluptas minima velit at necessitatibus ut dolores exercitationem ipsa placeat magnam. Ipsam cumque earum ratione. Dolorem reprehenderit ut iure quas, temporibus a? Incidunt aspernatur alias aliquam sed nemo accusantium?
-          Atque reprehenderit cumque necessitatibus nobis itaque placeat magni animi. Error ipsam magnam exercitationem unde tenetur distinctio architecto quod beatae animi officiis. Facere eius sint aspernatur facilis id? Animi, repellendus ut?
-          </p>
+            <div>
+            <p>Système : {{ planet.system }}</p>
+            <p>Distance : {{ planet.distance_from_earth }}</p>
+            <p>Capitale : {{ planet.capital === null ? '-' : planet.capital }}</p>
+          </div>
+          <div>
+            <p>Année de colonisation : {{ planet.date_colonization === null ? '-' : planet.date_colonization }}</p>
+            <p>Nombre d'habitants : {{ planet.nb_inhabitants === null ? '-' : 
+              (planet.nb_inhabitants < 1000000 ? new Intl.NumberFormat("fr-FR").format(planet.nb_inhabitants) : 
+                (planet.nb_inhabitants >= 1000000000 ? `${(planet.nb_inhabitants / 1000000000).toFixed(2)} milliards` : `${(planet.nb_inhabitants / 1000000).toFixed(2)} millions`)
+              ) }}
+            </p>
+            <p>Climat : {{ planet.climate.name }}</p>
+          </div>
         </div>
       </section>
 
@@ -140,24 +147,7 @@
     border-radius: 1rem;
     max-width: calc(3.5 * $shipImgWidth);
   }
-
-  .description-container {
-    margin: 4.5rem 1.5rem 0rem 1.5rem;
-    color: $color-light;
-    text-align: justify;
-  }
-
-  .description-container p {
-    line-height: 1.7;
-  }
-  .hr-1 {
-    width: 75%;
-    margin: 4rem auto 2.5rem auto;
-  }
-  .hr-2 {
-    width: 75%;
-    margin: 4.5rem auto 2.5rem auto;
-  }
+  
   .img-container {
     width: 100%;
     margin-bottom: 1.5rem;
@@ -166,6 +156,40 @@
       border-radius: 1rem 1rem 0 0;
     }
   }
+
+  .description-container {
+    display: flex;
+    justify-content: center;
+    gap: 10rem;
+    margin: 4rem 3rem 0rem;
+    color: $color-light;
+
+    div p {
+      margin: 0;
+      padding: 0.75rem;
+    }
+
+    @media (max-width: $md-breakpoint) {
+      gap: 5rem;
+    }
+
+    @media (max-width: $sm-breakpoint) {
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+
+      div {
+        text-align: center;
+      }
+    }
+  }
+
+  hr {
+    width: 75%;
+    margin: 4rem auto 2.5rem auto;
+    color: $color-light;
+  }
+
   .title-1 {
     text-align: center;
     margin-bottom: 2.5rem;
