@@ -1,5 +1,5 @@
 <script setup>
-  import { useRoute, RouterLink } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
   import H1TitleLayout from '@/components/layouts/H1TitleLayout.vue';
   import MainButton from '@/components/buttons/MainButton.vue';
   import { getPlanet, getShips } from '@/services/api.js';
@@ -7,19 +7,41 @@
 
   const planet = ref(undefined);
   const ships = ref(undefined);
+  const router = useRouter();
+  
+  const planetId = computed(() => {
+    return useRoute().params.id;
+  });
+
+  getPlanet(planetId.value)
+    .then(response => planet.value = response)
+    .catch(error => console.error(error));
+
+  getShips()
+    .then(response => ships.value = response)
+    .catch(error => console.error(error));
+
+  // Form
+  // Filter ships
   const selectedJourneyType = ref(null);
+
+  const filteredships = computed(() => {
+    if (selectedJourneyType.value === null) {
+      return ships.value;
+    } else {
+      return ships.value.filter(ship => ship.journey_type_id === selectedJourneyType.value);
+    }
+  });
+  
+  // Journey dates
   const departureDate = ref(null);
   const returnDate = ref(null);
   const journeyDuration = computed(() => {
     if (departureDate.value === null || returnDate.value === null) {
       return null;
     } else {
-      return returnDate.value - departureDate.value;
-      // const date1 = new Date(departureDate.value);
-      // const date2 = new Date(returnDate.value);
-      // const diffTime = Math.abs(date2 - date1);
-      // const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      // return diffDays;
+      const diffDate = Math.ceil(Math.abs(new Date(returnDate.value) - new Date(departureDate.value)) / (1000 * 60 * 60 * 24));
+      return diffDate < 1 ? 1 : diffDate;
     }
   });
 
@@ -35,26 +57,21 @@
     return `${year}-${month}-${day}`;
   };
 
-  const planetId = computed(() => {
-    return useRoute().params.id;
-  });
+  // Select a ship
+  const selectedShipId = ref(null);
+  const isShipSelected = ref(false);
+  // const outlineShip = (id) => {
+  //   if (selectedShipId.value === id) {
+  //     isShipSelected.value = true;
+  //   } else {
+  //     isShipSelected.value = false;
+  //   }
+  // }
 
-  getPlanet(planetId.value)
-    .then(response => planet.value = response)
-    .catch(error => console.error(error));
-
-  getShips()
-    .then(response => ships.value = response)
-    .catch(error => console.error(error));
-
-  // Filter ships
-  const filteredships = computed(() => {
-    if (selectedJourneyType.value === null) {
-      return ships.value;
-    } else {
-      return ships.value.filter(ship => ship.journey_type_id === selectedJourneyType.value);
-    }
-  });
+  // Submit journey
+  const submitJourney = () => {
+    router.push({ name: 'recap'});
+  }
 </script>
 
 <template>
@@ -86,45 +103,50 @@
 
       <hr class="hr-1">
 
-      <section class="journey-types-container">
-        <h2 class="title-1">Choisissez un type de voyage</h2>
-        <select v-model="selectedJourneyType">
-          <option v-for="journeyType in planet.journeyTypes" :key="journeyType.id" :value="journeyType.id">
-            {{ journeyType.name }}
-          </option>
-        </select>
+      <section>
+        <form @submit.prevent="submitJourney">
+          <div class="journey-types-container">
+            <h2 class="title-1">Choisissez un type de voyage</h2>
+            <label for="selectJourneyType"></label>
+            <select v-model="selectedJourneyType" id="selectJourneyType">
+              <option v-for="journeyType in planet.journeyTypes" :key="journeyType.id" :value="journeyType.id">
+                {{ journeyType.name }}
+              </option>
+            </select>
 
-        <div class="form-group">
-          <label for="departureDate">Date de départ:</label>
-          <input type="date" v-model="departureDate" :min="getCurrentDate()">
+            <div class="form-group">
+              <label for="departureDate">Date de départ:</label>
+              <input type="date" v-model="departureDate" :min="getCurrentDate()">
 
-          <label for="returnDate" v-if="selectedJourneyType !== 3" >Date de retour:</label>
-          <input type="date" v-if="selectedJourneyType !== 3" v-model="returnDate" :min="departureDate">
-        </div>
-      </section>
-
-      <hr class="hr-2">
-
-      <section class="ships-container">
-        <h2 class="title-2">Choisissez votre vaisseau</h2>
-          <div class="ships-flex-container">
-            <div class="ship-container" v-for="ship in filteredships" :key="ship.id" :value="ship.id">
-              <p class="ship-name">{{ ship.name }}</p>
-              <p class="price" v-if="selectedJourneyType === 1">Prix du voyage : {{ planet.journeyTypes.find(type => type.id === selectedJourneyType).base_price * ship.coeff_price }} €</p>
-              <p class="price" v-else-if="selectedJourneyType === 2">Prix du voyage : {{ departureDate }} €</p>
-              <p class="price" v-else-if="selectedJourneyType === 3">Prix du voyage : {{ planet.journeyTypes.find(type => type.id === selectedJourneyType).base_price * ship.coeff_price }} €</p>
-              <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name">
+              <label for="returnDate" v-if="selectedJourneyType !== 3" >Date de retour:</label>
+              <input type="date" v-if="selectedJourneyType !== 3" v-model="returnDate" :min="departureDate">
             </div>
           </div>
-      </section>
 
-      <div>
-        <RouterLink to="/recap">
-          <MainButton colorMode="light" class="main-button">
-            Valider
-          </MainButton>
-        </RouterLink>
-      </div>
+          <hr class="hr-2">
+
+          <div class="ships-container">
+            <h2 class="title-2">Choisissez votre vaisseau</h2>
+              <div class="ships-flex-container">
+                <label v-for="ship in filteredships" :key="ship.id" :for="ship.id">
+                  <input type="radio" :id="ship.id" name="ship" :value="ship.id" v-model="selectedShipId" class="ship-radio-input"/>
+
+                  <div class="ship-container">
+                    <p class="ship-name">{{ ship.name }}</p>
+                    <p class="price" v-if="selectedJourneyType === 1">Prix du voyage : {{ planet.journeyTypes.find(type => type.id === selectedJourneyType).base_price * ship.coeff_price }} €</p>
+                    <p class="price" v-else-if="selectedJourneyType === 2">Prix du voyage : {{ planet.journeyTypes.find(type => type.id === selectedJourneyType).base_price * ship.coeff_price * journeyDuration }} €</p>
+                    <p class="price" v-else-if="selectedJourneyType === 3">Prix du voyage : {{ planet.journeyTypes.find(type => type.id === selectedJourneyType).base_price * ship.coeff_price }} €</p>
+                    <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name" :class="[selectedShipId === ship.id ? 'selected-ship' : '']">
+                  </div>
+                </label>
+              </div>
+          </div>
+
+          <div>
+            <MainButton colorMode="light" class="main-button" type="submit">Valider</MainButton>
+          </div>
+        </form>
+      </section>
     </main>
   </div>
 </template>
@@ -223,11 +245,11 @@
   .journey-types-container select {
     width: 20em;
     padding: 0.5rem;
-    border-radius: 0.5rem;
-    &:hover{
-      cursor: pointer;
-    }
+    border-radius: 1rem;
+    cursor: pointer;
+    text-align: center;
   }
+
   .journey-types-container option {
     text-align: center;
   }
@@ -235,10 +257,10 @@
     margin-top: 0.5rem;
     color: $color-light;
   }
-  .journey-types-container input {
+  .journey-types-container input { // Dates inputs
     width: 100%;
     padding: 0.5rem;
-    border-radius: 0.5rem;
+    border-radius: 1rem;
     cursor: pointer;
   }
   .form-group {
@@ -257,6 +279,10 @@
     margin: 3rem auto 7rem;
   }
 
+  .ship-radio-input {
+    display: none;
+  }
+
   .ship-container {
       margin: 4rem 2rem 0;
       display: flex;
@@ -273,16 +299,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 0 1rem 0;
+    margin: 0 0 1rem;
     color: $color-light;
   }
 
   .price {
     color: $color-light;
+    margin: 0 0 1rem;
   }
 
   .ship-container img {
-    border-radius: 0.5rem;
+    border-radius: 1rem;
     width: $shipImgWidth;
     height: calc($shipImgWidth * 9/16);
 
@@ -297,11 +324,15 @@
       }
     }
   }
+
+  .selected-ship {
+    border: 2px solid $color-light;
+    box-shadow: 0 0 1rem $color-light;
+    border-radius: 1rem;
+  }
   
   .main-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: block;
     margin: 2rem auto 7rem auto;
     width: 25%;
   }
