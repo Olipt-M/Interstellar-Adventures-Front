@@ -17,7 +17,6 @@
     padding: 0.5rem 4rem;
     border-radius: 1rem;
     font-size: 2rem;
-    text-decoration: none;
 
     &.light-mode {
       border: 1px solid $color-light;

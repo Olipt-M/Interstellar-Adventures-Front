@@ -1,15 +1,57 @@
 <script setup>
-  import { useRoute, RouterLink } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
   import H1TitleLayout from '@/components/layouts/H1TitleLayout.vue';
   import MainButton from '@/components/buttons/MainButton.vue';
   import { getPlanet, getShips } from '@/services/api.js';
-  import { ref, computed } from 'vue';
+  import { ref, computed, onBeforeMount } from 'vue';
 
   const planet = ref(undefined);
   const ships = ref(undefined);
+  const router = useRouter();
+  
+  const planetId = computed(() => {
+    return useRoute().params.id;
+  });
+
+  onBeforeMount(() => {
+    getPlanet(planetId.value)
+      .then(response => planet.value = response)
+      .catch(error => console.error(error));
+
+    getShips()
+      .then(response => ships.value = response)
+      .catch(error => console.error(error));
+  });
+
+  // Form
+  // Filter ships
   const selectedJourneyType = ref(null);
+
+  const filteredships = computed(() => {
+    if (selectedJourneyType.value === null) {
+      let allJourneyTypesIds = [];
+      if (ships.value !== undefined) {
+        for (const type of planet.value.journeyTypes) {
+          allJourneyTypesIds.push(type.id);
+        }
+        return ships.value.filter(ship => allJourneyTypesIds.includes(ship.journey_type_id));
+      }
+    } else {
+      return ships.value.filter(ship => ship.journey_type_id === selectedJourneyType.value);
+    }
+  });
+  
+  // Journey dates
   const departureDate = ref(null);
   const returnDate = ref(null);
+  const journeyDuration = computed(() => {
+    if (departureDate.value === null || returnDate.value === null) {
+      return null;
+    } else {
+      const diffDate = Math.ceil(Math.abs(new Date(returnDate.value) - new Date(departureDate.value)) / (1000 * 60 * 60 * 24));
+      return diffDate < 1 ? 1 : diffDate;
+    }
+  });
 
   const getCurrentDate = () => {
     const today = new Date();
@@ -23,141 +65,175 @@
     return `${year}-${month}-${day}`;
   };
 
-  const planetId = computed(() => {
-    return useRoute().params.id;
-  });
+  // Select a ship
+  const selectedShipId = ref(null);
 
-  getPlanet(planetId.value)
-    .then(response => planet.value = response)
-    .catch(error => console.error(error));
-
-  getShips()
-    .then(response => ships.value = response)
-    .catch(error => console.error(error));
-
-  // Filter ships
-  const filteredships = computed(() => {
-    if (selectedJourneyType.value === null) {
-      return ships.value;
-    } else {
-      return ships.value.filter(ship => ship.journey_type_id === selectedJourneyType.value);
-    }
-  });
+  // Submit journey
+  const submitJourney = () => {
+    router.push({ name: 'recap'});
+  }
 </script>
 
 <template>
-  <main>
-    <H1TitleLayout>{{ planet.name }}</H1TitleLayout>
+  <H1TitleLayout>{{ planet === undefined ? '' : planet.name }}</H1TitleLayout>
 
-    <section class="container">
-      <div class="img-container">
-        <img :src="`../img-planetes/${planet.picture}`" :alt="planet.name">
-      </div>
-      <div class="description-container">
-        <p>{{ planet.system }}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, accusamus excepturi sed mollitia quae fugit facere labore rem ipsam quam soluta incidunt voluptatibus quos obcaecati ipsum sapiente nihil suscipit! Dolorum?
-        Et velit dolore recusandae? Modi maiores quaerat quos unde dolore asperiores adipisci, nisi minus culpa iure quibusdam. Enim tempore fuga dolor saepe quisquam molestias dicta! In, ab mollitia! Recusandae, in?
-        Alias impedit perspiciatis sequi veritatis sapiente dolorum est similique quibusdam architecto assumenda aut quam voluptatum facilis tempora tempore, quod ab aspernatur delectus numquam non! Laborum deserunt quo suscipit repellat. Amet!
-        Molestiae, voluptas minima velit at necessitatibus ut dolores exercitationem ipsa placeat magnam. Ipsam cumque earum ratione. Dolorem reprehenderit ut iure quas, temporibus a? Incidunt aspernatur alias aliquam sed nemo accusantium?
-        Atque reprehenderit cumque necessitatibus nobis itaque placeat magni animi. Error ipsam magnam exercitationem unde tenetur distinctio architecto quod beatae animi officiis. Facere eius sint aspernatur facilis id? Animi, repellendus ut?
-        </p>
-      </div>
-    </section>
-
-    <hr class="hr-1">
-
-    <section class="journey-types-container">
-      <h2 class="title-1">Choisissez un type de voyage</h2>
-      <select v-model="selectedJourneyType">
-        <option v-for="journeyType in planet.journeyTypes" :key="journeyType.id" :value="journeyType.id">
-          {{ journeyType.name }}
-        </option>
-      </select>
-
-      <div class="form-group">
-        <label for="departureDate">Date de départ:</label>
-        <input type="date" v-model="departureDate" :min="getCurrentDate()">
-
-        <label for="returnDate" v-if="selectedJourneyType !== 3" >Date de retour:</label>
-        <input type="date" v-if="selectedJourneyType !== 3" v-model="returnDate" :min="departureDate">
-      </div>
-    </section>
-
-    <hr class="hr-2">
-
-    <section class="ships-container">
-      <h2 class="title-2">Choisissez votre vaisseau</h2>
-        <div class="ships-flex-container">
-          <div class="ship-container" v-for="ship in filteredships" :key="ship.id" :value="ship.id">
-            <p class="ship-name" v-if="selectedJourneyType === 1">{{ ship.name }} - {{ ship.journeyTypes.base_price * ship.coeff_price }}</p>
-            <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name">
+  <div v-if="planet !== undefined" class="container">
+    <main>
+      <section>
+        <div class="img-container">
+          <img :src="`../img-planetes/${planet.picture}`" :alt="planet.name">
+        </div>
+        <div class="description-container">
+            <div>
+            <p>Système : {{ planet.system }}</p>
+            <p>Distance : {{ planet.distance_from_earth }}</p>
+            <p>Capitale : {{ planet.capital === null ? '-' : planet.capital }}</p>
+          </div>
+          <div>
+            <p>Année de colonisation : {{ planet.date_colonization === null ? '-' : planet.date_colonization }}</p>
+            <p>Nombre d'habitants : {{ planet.nb_inhabitants === null ? '-' : 
+              (planet.nb_inhabitants < 1000000 ? new Intl.NumberFormat("fr-FR").format(planet.nb_inhabitants) : 
+                (planet.nb_inhabitants >= 1000000000 ? `${(planet.nb_inhabitants / 1000000000).toFixed(2)} milliards` : `${(planet.nb_inhabitants / 1000000).toFixed(2)} millions`)
+              ) }}
+            </p>
+            <p>Climat : {{ planet.climate.name }}</p>
           </div>
         </div>
-    </section>
+      </section>
 
-    <div>
-      <RouterLink to="/recap">
-        <MainButton class="main-button">
-          Valider
-        </MainButton>
-      </RouterLink>
-    </div>
-  </main>  
+      <hr class="hr-1">
+
+      <section>
+        <form @submit.prevent="submitJourney">
+          <div class="journey-types-container">
+            <h2 class="title-1">Choisissez un type de voyage</h2>
+            <label for="selectJourneyType"></label>
+            <select v-model="selectedJourneyType" id="selectJourneyType">
+              <option v-for="journeyType in planet.journeyTypes" :key="journeyType.id" :value="journeyType.id">
+                {{ journeyType.name }}
+              </option>
+            </select>
+
+            <div class="form-group">
+              <label for="departureDate">Date de départ:</label>
+              <input type="date" v-model="departureDate" :min="getCurrentDate()">
+
+              <label for="returnDate" v-if="selectedJourneyType !== 3" >Date de retour:</label>
+              <input type="date" v-if="selectedJourneyType !== 3" v-model="returnDate" :min="departureDate">
+            </div>
+          </div>
+
+          <hr class="hr-2">
+
+          <div class="ships-container">
+            <h2 class="title-2">Choisissez votre vaisseau</h2>
+              <div class="ships-flex-container">
+                <label v-for="ship in filteredships" :key="ship.id" :for="ship.id">
+                  <input type="radio" :id="ship.id" name="ship" :value="ship.id" v-model="selectedShipId" class="ship-radio-input"/>
+
+                  <div class="ship-container">
+                    <p class="ship-name">{{ ship.name }}</p>
+                    <p class="price" v-if="selectedJourneyType === 1">Prix du voyage : {{ planet.journeyTypes.find(type => type.id === selectedJourneyType).base_price * ship.coeff_price }} €</p>
+                    <p class="price" v-else-if="selectedJourneyType === 2">Prix du voyage : {{ planet.journeyTypes.find(type => type.id === selectedJourneyType).base_price * ship.coeff_price * journeyDuration }} €</p>
+                    <p class="price" v-else-if="selectedJourneyType === 3">Prix du voyage : {{ planet.journeyTypes.find(type => type.id === selectedJourneyType).base_price * ship.coeff_price }} €</p>
+                    <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name" :class="[selectedShipId === ship.id ? 'selected-ship' : '']">
+                  </div>
+                </label>
+              </div>
+          </div>
+
+          <div>
+            <MainButton colorMode="light" class="main-button" type="submit">Valider</MainButton>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
 </template>
 
 <style lang='scss' scoped>
+  $shipImgWidth: 400px;
 
-  .main-button {
+  .container {
     display: flex;
     justify-content: center;
-    align-items: center;
-    margin: 0rem auto 5rem auto;
-    width: 25%;
+    margin: 3rem;
+
+    @media (max-width: $sm-breakpoint) {
+      margin: 3rem 0;
+    }
+  }
+
+  main {
+    background: $color-dark-blue2;
+    border-radius: 1rem;
+    max-width: calc(3.5 * $shipImgWidth);
+  }
+  
+  .img-container {
+    width: 100%;
+    margin-bottom: 1.5rem;
+
+    img {
+      border-radius: 1rem 1rem 0 0;
+    }
   }
 
   .description-container {
-    margin: 4.5rem 1.5rem 0rem 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 10rem;
+    margin: 4rem 3rem 0rem;
     color: $color-light;
-    text-align: justify;
+
+    div p {
+      margin: 0;
+      padding: 0.75rem;
+    }
+
+    @media (max-width: $md-breakpoint) {
+      gap: 5rem;
+    }
+
+    @media (max-width: $sm-breakpoint) {
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+
+      div {
+        text-align: center;
+      }
+    }
   }
 
-  .description-container p {
-    line-height: 1.7;
-  }
-  .hr-1 {
+  hr {
     width: 75%;
     margin: 4rem auto 2.5rem auto;
+    color: $color-light;
   }
-  .hr-2 {
-    width: 75%;
-    margin: 4.5rem auto 2.5rem auto;
-  }
-  .img-container {
-    width: 100%;
-    margin: 3rem 0 1.5rem 0;
-  }
+
   .title-1 {
     text-align: center;
     margin-bottom: 2.5rem;
     color: $color-light;
-    background-color: $color-dark-blue2;
+    background-color: $color-dark-blue1;
     border: 1px solid $color-light;
     padding: 1rem;
     border-radius: 1rem;
     width: 50%;
   }
   .title-2 {
-  margin: 4.5rem auto 1rem auto;
-  background-color: $color-dark-blue2;
-  color: $color-light;
-  border: 1px solid $color-light;
-  padding: 1rem;
-  border-radius: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  width: 50%;
+    margin: 4.5rem auto 1rem auto;
+    background-color: $color-dark-blue1;
+    color: $color-light;
+    border: 1px solid $color-light;
+    padding: 1rem;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 50%;
   }
   .journey-types-container {
     display: flex;
@@ -169,11 +245,11 @@
   .journey-types-container select {
     width: 20em;
     padding: 0.5rem;
-    border-radius: 0.5rem;
-    &:hover{
-      cursor: pointer;
-    }
+    border-radius: 1rem;
+    cursor: pointer;
+    text-align: center;
   }
+
   .journey-types-container option {
     text-align: center;
   }
@@ -181,10 +257,10 @@
     margin-top: 0.5rem;
     color: $color-light;
   }
-  .journey-types-container input {
+  .journey-types-container input { // Dates inputs
     width: 100%;
     padding: 0.5rem;
-    border-radius: 0.5rem;
+    border-radius: 1rem;
     cursor: pointer;
   }
   .form-group {
@@ -200,6 +276,11 @@
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    margin: 3rem auto 7rem;
+  }
+
+  .ship-radio-input {
+    display: none;
   }
 
   .ship-container {
@@ -208,27 +289,51 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
+
+      @media (max-width: $sm-breakpoint) {
+        margin: 4rem 0 0;
+      }
     }
   
   .ship-name{
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 0 1rem 0;
+    margin: 0 0 1rem;
     color: $color-light;
   }
 
+  .price {
+    color: $color-light;
+    margin: 0 0 1rem;
+  }
+
   .ship-container img {
-    border-radius: 0.5rem;
-    $img-width: 400px;
-    width: $img-width;
-    height: calc($img-width * 9/16);
+    border-radius: 1rem;
+    width: $shipImgWidth;
+    height: calc($shipImgWidth * 9/16);
 
     &:hover {
-      transform: scale(1.03);
       box-shadow: 0 0 1rem $color-light;
+      transform: scale(1.03);
       transition: transform 0.3s ease-in-out;
       cursor: pointer;
+
+      @media (max-width: $sm-breakpoint) {
+        transform: scale(1);
+      }
     }
+  }
+
+  .selected-ship {
+    border: 2px solid $color-light;
+    box-shadow: 0 0 1rem $color-light;
+    border-radius: 1rem;
+  }
+  
+  .main-button {
+    display: block;
+    margin: 2rem auto 7rem auto;
+    width: 25%;
   }
 </style>
