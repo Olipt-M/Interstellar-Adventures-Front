@@ -3,7 +3,7 @@
   import H1TitleLayout from '@/components/layouts/H1TitleLayout.vue';
   import MainButton from '@/components/buttons/MainButton.vue';
   import { getPlanet, getShips } from '@/services/api.js';
-  import { ref, computed } from 'vue';
+  import { ref, computed, onBeforeMount } from 'vue';
 
   const planet = ref(undefined);
   const ships = ref(undefined);
@@ -13,13 +13,15 @@
     return useRoute().params.id;
   });
 
-  getPlanet(planetId.value)
-    .then(response => planet.value = response)
-    .catch(error => console.error(error));
+  onBeforeMount(() => {
+    getPlanet(planetId.value)
+      .then(response => planet.value = response)
+      .catch(error => console.error(error));
 
-  getShips()
-    .then(response => ships.value = response)
-    .catch(error => console.error(error));
+    getShips()
+      .then(response => ships.value = response)
+      .catch(error => console.error(error));
+  });
 
   // Form
   // Filter ships
@@ -27,6 +29,7 @@
 
   const filteredships = computed(() => {
     if (selectedJourneyType.value === null) {
+      // planet.value.journeyTypes
       return ships.value;
     } else {
       return ships.value.filter(ship => ship.journey_type_id === selectedJourneyType.value);
@@ -59,14 +62,6 @@
 
   // Select a ship
   const selectedShipId = ref(null);
-  const isShipSelected = ref(false);
-  // const outlineShip = (id) => {
-  //   if (selectedShipId.value === id) {
-  //     isShipSelected.value = true;
-  //   } else {
-  //     isShipSelected.value = false;
-  //   }
-  // }
 
   // Submit journey
   const submitJourney = () => {
@@ -75,9 +70,9 @@
 </script>
 
 <template>
-  <H1TitleLayout>{{ planet.name }}</H1TitleLayout>
+  <H1TitleLayout>{{ planet === undefined ? '' : planet.name }}</H1TitleLayout>
 
-  <div class="container">
+  <div v-if="planet !== undefined" class="container">
     <main>
       <section>
         <div class="img-container">
