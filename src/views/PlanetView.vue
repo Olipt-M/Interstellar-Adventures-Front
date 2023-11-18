@@ -4,14 +4,14 @@
   import MainButton from '@/components/buttons/MainButton.vue';
   import { getPlanet, getShips } from '@/services/api.js';
   import { ref, computed, onBeforeMount } from 'vue';
+  import { useRecapStore } from '@/stores/recapStore.js';
+  const recapStore = useRecapStore();
 
   const planet = ref(undefined);
   const ships = ref(undefined);
   const router = useRouter();
   
-  const planetId = computed(() => {
-    return useRoute().params.id;
-  });
+  const planetId = computed(() => useRoute().params.id);
 
   onBeforeMount(() => {
     getPlanet(planetId.value)
@@ -70,7 +70,18 @@
 
   // Submit journey
   const submitJourney = () => {
-    router.push({ name: 'recap'});
+    recapStore.setJourney({
+      planet: planet.value,
+      journeyType: planet.value.journeyTypes.find(type => type.id === selectedJourneyType), // undefined voir pourquoi
+      departureDate: departureDate.value,
+      returnDate: returnDate.value,
+      journeyDuration: journeyDuration.value,
+      ship: ships.value.find(ship => ship.id === selectedShipId.value),
+      // price // Déplacer le calcul du prix depuis le HTML vers le script
+    });
+
+    console.log(recapStore.getJourney);
+    // router.push({ name: 'recap'});
   }
 </script>
 
@@ -117,9 +128,11 @@
             <div class="form-group">
               <label for="departureDate">Date de départ:</label>
               <input type="date" v-model="departureDate" :min="getCurrentDate()">
+            </div>
 
-              <label for="returnDate" v-if="selectedJourneyType !== 3" >Date de retour:</label>
-              <input type="date" v-if="selectedJourneyType !== 3" v-model="returnDate" :min="departureDate">
+            <div v-if="selectedJourneyType === 2" class="form-group">
+              <label for="returnDate" >Date de retour:</label>
+              <input type="date" v-model="returnDate" :min="departureDate">
             </div>
           </div>
 
