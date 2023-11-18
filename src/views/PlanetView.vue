@@ -29,8 +29,13 @@
 
   const filteredships = computed(() => {
     if (selectedJourneyType.value === null) {
-      // planet.value.journeyTypes
-      return ships.value;
+      let allJourneyTypesIds = [];
+      if (ships.value !== undefined) {
+        for (const type of planet.value.journeyTypes) {
+          allJourneyTypesIds.push(type.id);
+        }
+        return ships.value.filter(ship => allJourneyTypesIds.includes(ship.journey_type_id));
+      }
     } else {
       return ships.value.filter(ship => ship.journey_type_id === selectedJourneyType.value);
     }
@@ -218,17 +223,17 @@
     width: 50%;
   }
   .title-2 {
-  margin: 4.5rem auto 1rem auto;
-  background-color: $color-dark-blue1;
-  color: $color-light;
-  border: 1px solid $color-light;
-  padding: 1rem;
-  border-radius: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  width: 50%;
+    margin: 4.5rem auto 1rem auto;
+    background-color: $color-dark-blue1;
+    color: $color-light;
+    border: 1px solid $color-light;
+    padding: 1rem;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 50%;
   }
   .journey-types-container {
     display: flex;
