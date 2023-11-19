@@ -29,7 +29,7 @@ setup() {
 
 <template>
   <div>
-    <carousel :autoplay="2500" :items-to-show="1">
+    <carousel :autoplay="3500" :items-to-show="1">
       <slide v-for="planet in planets" :key="planet.id">
         <img :src="`img-planetes/${planet.picture}`" :alt="planet.name">
       </slide>
