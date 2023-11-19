@@ -23,7 +23,7 @@
       background: $color-light;
       color: $color-night-blue;
 
-      &:hover {
+      &:not(.disabled):hover {
         background: $color-dark-blue1;
         color: $color-light;
       }
@@ -34,7 +34,7 @@
       background: $color-dark-blue1;
       color: $color-light;
 
-      &:hover {
+      &:not(.disabled):hover {
         background: $color-light;
         color: $color-night-blue;
       }

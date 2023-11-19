@@ -80,6 +80,26 @@
   };
 
   // Submit journey
+  const isFormCompleted = computed(() => {
+    if (selectedJourneyType.value === null || selectedShipId.value === null) {
+      return false;
+    } else {
+      if (selectedJourneyType.value === 2) {
+        if (departureDate.value === null || returnDate.value === null) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        if (departureDate.value === null) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    }
+  });
+
   const submitJourney = () => {
     recapStore.setJourney({
       planet: planet.value,
@@ -165,7 +185,14 @@
           </div>
 
           <div>
-            <MainButton colorMode="light" class="main-button" type="submit">Valider</MainButton>
+            <MainButton 
+              colorMode="light" 
+              class="main-button" 
+              :class="{'disabled': !isFormCompleted}" 
+              :disabled="!isFormCompleted" 
+              type="submit">
+              Valider
+            </MainButton>
           </div>
         </form>
       </section>
@@ -357,5 +384,20 @@
     display: block;
     margin: 2rem auto 7rem auto;
     width: 25%;
+
+    @media (max-width: $md-breakpoint) {
+      width: 40%;
+    }
+
+    @media (max-width: $sm-breakpoint) {
+      width: 60%;
+    }
+
+    &.disabled {
+      color: $color-light;
+      background-color: $color-night-blue;
+      opacity: 0.25;
+      cursor: default;
+    }
   }
 </style>
