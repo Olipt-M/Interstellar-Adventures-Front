@@ -12,19 +12,3 @@ export const useRecapStore = defineStore('recap', () => {
 
   return { journey, getJourney, setJourney };
 });
-
-// export const useRecapStore = defineStore('recap', {
-//   state: () => {
-//     return {
-//       journey: {}
-//     }
-//   },
-//   actions: {
-//     setJourney(journey) {
-//       this.journey = journey
-//     }
-//   },
-//   getters: {
-    
-//   }
-// });

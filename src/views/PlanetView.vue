@@ -6,10 +6,10 @@
   import { ref, computed, onBeforeMount } from 'vue';
   import { useRecapStore } from '@/stores/recapStore.js';
   const recapStore = useRecapStore();
+  const router = useRouter();
 
   const planet = ref(undefined);
   const ships = ref(undefined);
-  const router = useRouter();
   
   const planetId = computed(() => useRoute().params.id);
 
@@ -68,20 +68,31 @@
   // Select a ship
   const selectedShipId = ref(null);
 
+  // Calculate price
+  const calculateJourneyPrice = (shipId) => {
+    if (selectedJourneyType.value === 1) {
+      return planet.value.journeyTypes.find(type => type.id === selectedJourneyType.value).base_price * ships.value.find(ship => ship.id === shipId).coeff_price;
+    } else if (selectedJourneyType.value === 2) {
+      return planet.value.journeyTypes.find(type => type.id === selectedJourneyType.value).base_price * ships.value.find(ship => ship.id === shipId).coeff_price * journeyDuration.value;
+    } else if (selectedJourneyType.value === 3) {
+      return planet.value.journeyTypes.find(type => type.id === selectedJourneyType.value).base_price * ships.value.find(ship => ship.id === shipId).coeff_price;
+    }
+  };
+
   // Submit journey
   const submitJourney = () => {
     recapStore.setJourney({
       planet: planet.value,
-      journeyType: planet.value.journeyTypes.find(type => type.id === selectedJourneyType), // undefined voir pourquoi
+      journeyType: planet.value.journeyTypes.find(type => type.id === selectedJourneyType.value),
       departureDate: departureDate.value,
       returnDate: returnDate.value,
       journeyDuration: journeyDuration.value,
       ship: ships.value.find(ship => ship.id === selectedShipId.value),
-      // price // Déplacer le calcul du prix depuis le HTML vers le script
+      price: calculateJourneyPrice(selectedShipId.value)
     });
 
-    console.log(recapStore.getJourney);
-    // router.push({ name: 'recap'});
+    // console.log(recapStore.getJourney);
+    router.push({ name: 'recap'});
   }
 </script>
 
@@ -146,9 +157,7 @@
 
                   <div class="ship-container">
                     <p class="ship-name">{{ ship.name }}</p>
-                    <p class="price" v-if="selectedJourneyType === 1">Prix du voyage : {{ planet.journeyTypes.find(type => type.id === selectedJourneyType).base_price * ship.coeff_price }} €</p>
-                    <p class="price" v-else-if="selectedJourneyType === 2">Prix du voyage : {{ planet.journeyTypes.find(type => type.id === selectedJourneyType).base_price * ship.coeff_price * journeyDuration }} €</p>
-                    <p class="price" v-else-if="selectedJourneyType === 3">Prix du voyage : {{ planet.journeyTypes.find(type => type.id === selectedJourneyType).base_price * ship.coeff_price }} €</p>
+                    <p class="price">Prix du voyage : {{ calculateJourneyPrice(ship.id) }} €</p>
                     <img :src="`../img-vaisseaux/${ship.picture}`" :alt="ship.name" :class="[selectedShipId === ship.id ? 'selected-ship' : '']">
                   </div>
                 </label>
