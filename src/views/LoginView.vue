@@ -2,38 +2,57 @@
 import H1TitleLayout from '@/components/layouts/H1TitleLayout.vue';
 import MainButton from '@/components/buttons/MainButton.vue';
 import { signIn, signUp } from '@/services/api.js';
-import { ref, reactive } from "vue";
+import { ref } from "vue";
 
 const displayLogin = ref(true);
 
-// Créez un objet réactif pour stocker les données du formulaire
-const formData = reactive({
+const user = ref({
   email: "",
   password: "",
   firstname: "",
   lastname: "",
-  confEmail: "",
-  confPassword: "",
 });
 
-const errorSignIn = ref(null);
-const errorSignUp = ref(null);
+// const errorSignIn = ref(null);
+// const errorSignUp = ref(null);
 
-const userSignIn = async () => {
-  try {
-    const response = await signIn(formData.email, formData.password);
-  } catch (error) {
-    errorSignIn.value = "Erreur de connexion. Veuillez réessayer.";
-  }
-};
+// const userSignIn = async() => {
+//   try {
+//     const response = await signIn({email: formData.value.email, password: formData.value.password});
+//     console.log(response);
+//   } catch (error) {
+//     errorSignIn.value = "Erreur de connexion. Veuillez réessayer.";
+//   }
+// };
 
-const userSignUp = async () => {
-  try {
-    const response = await signUp(formData);
-  } catch (error) {
-    errorSignUp.value = "Erreur d'inscription. Veuillez réessayer.";
-  }
-};
+// const userSignUp = async () => {
+//   try {
+//     const response = await signUp({email: formData.value.email, password: formData.value.password, firstname: formData.value.firstname, lastname: formData.value.lastname});
+//     console.log(response);
+//   } catch (error) {
+//     errorSignUp.value = "Erreur d'inscription. Veuillez réessayer.";
+//   }
+// };
+
+const userSignIn = () => {
+    signIn ({
+        email: user.value.email, 
+        password: user.value.password
+    })
+    .then(() => console.log(user.value));
+}
+
+const userSignUp = () => {
+    signUp ({
+        email: user.value.email, 
+        password: user.value.password, 
+        firstname: user.value.firstname, 
+        lastname: user.value.lastname
+    })
+    .then(() => console.log(user.value));
+}
+
+
 </script>
 
 <template>
@@ -47,65 +66,66 @@ const userSignUp = async () => {
                     @click="!displayLogin ? displayLogin = !displayLogin : null" checked>
                 <label for="btn_co" class="btn connexion">Connexion</label>
 
-                <input type="radio" name="btn" class="btn inscription" id="btn_ins" value="formSignin"
+                <input type="radio" name="btn" class="btn inscription" id="btn_ins" value="formSignIn"
                     @click="displayLogin ? displayLogin = !displayLogin : null">
                 <label for="btn_ins" class="btn inscription">Inscription</label>
             </div>
-            
         </div>
 
         <div v-if="displayLogin">
-            <form id="login" action="" method="post">
+            <form id="login" method="POST" @submit.prevent="userSignIn">
                 <div class="login-container">
                     <div class="form-group">
                         <div class="form-item-group">
                             <label for="inputEmail">Email</label>
-                            <input type="email" name="email" id="inputEmail" placeholder="Email"/>
+                            <input type="email" name="email" v-model="user.email"/>
                         </div>
                         <div class="form-item-group">
                             <label for="inputPassword">Mot de passe</label>
-                            <input type="password" name="password" id="inputPassword" placeholder="Mot de passe"/>
+                            <input type="password" name="password" v-model="user.password"/>
                         </div>
                     </div>
-
-                    <input class="btn" type="submit" value="Ouvrir une session" />
-
+                    <RouterLink to="/my-account">
+                            <MainButton type="submit" class="main-button">
+                                Valider
+                            </MainButton>
+                    </RouterLink>
                 </div>
             </form>
         </div>
 
         <section id="createAccount">
             <div v-if="!displayLogin">
-                <form method="POST" @submit.prevent="handleSignUp">
+                <form method="POST" @submit.prevent="userSignUp">
                     <div class="container">
                         <div class="form-group">
                             <div class="form-item-group">
                                 <label for="inputEmail">Email *</label>
-                                <input type="email" name="email" id="email"/>
+                                <input type="email" name="email" id="email" v-model="user.email"/>
                             </div>
                             <div class="form-item-group">
                                 <label for="inputEmailConfirm">Confirmer email *</label>
-                                <input type="email" name="emailConfirm" id="inputEmailConfirm"/>
+                                <input type="email" name="emailConfirm" id="inputEmailConfirm" v-model="user.confEmail"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="form-item-group">
                                 <label for="inputPassword">Mot de passe *</label>
-                                <input type="password" name="password" id="inputPassword"/>
+                                <input type="password" name="password" id="inputPassword" v-model="user.password"/>
                             </div>
                             <div class="form-item-group">
                                 <label for="inputPasswordConfirm">Confirmer le mot de passe *</label>
-                                <input type="password" name="passwordConfirm" id="inputPasswordConfirm"/>
+                                <input type="password" name="passwordConfirm" id="inputPasswordConfirm" v-model="user.confPassword"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="form-item-group">
                                 <label for="inputFirstname">Prénom *</label>
-                                <input type="text" name="firstname" id="inputFirstname"/>
+                                <input type="text" name="firstname" id="inputFirstname" v-model="user.firstname"/>
                             </div>
                             <div class="form-item-group">
                                 <label for="inputLastname">Nom *</label>
-                                <input type="text" name="lastname" id="inputLastname"/>
+                                <input type="text" name="lastname" id="inputLastname" v-model="user.lastname"/>
                             </div>
                         </div>
 
@@ -129,10 +149,9 @@ const userSignUp = async () => {
 .main-button {
     display: block;
     margin: 0 auto;
-
 }
 
-p{
+p {
     text-align: center;
     color: $color-light;
 }
@@ -150,7 +169,7 @@ p{
     align-items: center;
     justify-content: center;
     padding: 2rem;
-    margin: 10rem auto;
+    margin: 5rem auto;
     background-color: $color-dark-blue2;
     width: 40vw;
     padding: 3rem;

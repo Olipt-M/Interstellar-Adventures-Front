@@ -24,10 +24,10 @@ export const getJourneyTypes = async () => {
   return api(`/journey-types`, { method: 'GET' });
 }
 
-export const signUp = async () => {
-  return api(`/auth/register`, { method: 'POST' });
+export const signUp = async (credentials) => {
+  return api(`/auth/register`, { method: 'POST', body: credentials });
 }
 
-export const signIn = async () => {
-  return api(`/auth/login`, { method: 'POST' });
+export const signIn = async (credentials) => {
+  return api(`/auth/login`, { method: 'POST', body: credentials });
 }
