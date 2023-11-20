@@ -18,23 +18,25 @@ const user = ref({
 });
 
 const userSignUp = () => {
-    console.log(user.value);
+    // console.log(user.value);
     signUp ({
         email: user.value.email, 
         password: user.value.password, 
         firstname: user.value.firstname, 
         lastname: user.value.lastname
     })
+    .then(response => console.log(response))
     .then(() => router.push({ name: 'account' }))
     .catch(error => console.error(error));
 }
 
 const userSignIn = () => {
-    console.log(user.value);
+    // console.log(user.value);
     signIn ({
         email: user.value.email, 
         password: user.value.password
     })
+    .then(response => console.log(response))
     .then(() => router.push({ name: 'account' }))
     .catch(error => console.error(error));
 }
