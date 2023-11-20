@@ -1,15 +1,31 @@
 <script setup>
   import H1TitleLayout from '@/components/layouts/H1TitleLayout.vue';
   import MainButton from '@/components/buttons/MainButton.vue';
+  import { registerJourney } from '@/services/api.js';
   import { useRecapStore } from '@/stores/recapStore.js';
   const recapStore = useRecapStore();
+  import { useRouter } from 'vue-router';
+  const router = useRouter();
 
   const journey = recapStore.getJourney;
 
   const confirmJourney = () => {
-    
+    // A FAIRE : D'abord vérifier si l'utilisateur est connecté
 
-    // recapStore.resetJourney(); // conditionner le reset à la validation à la validation de la requête
+    // A FAIRE : Lier le voyage à l'utilisateur
+    registerJourney({
+      ship_id: journey.ship.id,
+      planet_id: journey.planet.id,
+      journey_type_id: journey.journeyType.id,
+      departure_date: journey.departureDate,
+      return_date: journey.returnDate,
+      price: journey.price
+    })
+    .then(() => {
+      recapStore.resetJourney;
+      router.push({ name: 'account'});
+    })
+    .catch(error => console.error(error));
   }
 </script>
 
@@ -25,10 +41,10 @@
       <div class="recap-container">
         <p>{{ journey.planet.name }}</p>
         <p>Votre voyage : {{ journey.journeyType.name }}</p>
-        <p v-if="journey.journeyType.id === 2">Du {{ journey.departureDate }} au {{ journey.returnDate }}</p>
+        <p v-if="journey.journeyType.id === 2">Du {{ journey.departureDate.split('-').reverse().join('/') }} au {{ journey.returnDate.split('-').reverse().join('/') }}</p>
         <p v-else>Départ le {{ journey.departureDate }}</p>
         <p>Prix : {{ journey.price }} €</p>
-        <p>Votre vaisseau</p>
+        <p>Votre vaisseau : {{ journey.ship.name }}</p>
       </div>
 
       <div class="img-container">
@@ -119,7 +135,7 @@
     text-align: center;
     margin: 0;
     
-    p:first-of-type, p:last-of-type {
+    p:first-of-type {
       text-transform: uppercase;
       font-weight: bold;
     }
