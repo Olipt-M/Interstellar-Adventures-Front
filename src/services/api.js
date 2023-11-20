@@ -23,3 +23,11 @@ export const getClimates = async () => {
 export const getJourneyTypes = async () => {
   return api(`/journey-types`, { method: 'GET' });
 }
+
+export const signUp = async () => {
+  return api(`/auth/register`, { method: 'POST' });
+}
+
+export const signIn = async () => {
+  return api(`/auth/login`, { method: 'POST' });
+}
