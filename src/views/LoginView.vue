@@ -85,11 +85,7 @@ const userSignUp = () => {
                             <input type="password" name="password" v-model="user.password"/>
                         </div>
                     </div>
-                    <RouterLink to="/my-account">
-                            <MainButton type="submit" class="main-button">
-                                Valider
-                            </MainButton>
-                    </RouterLink>
+                    <MainButton type="submit" class="main-button">Valider</MainButton>
                 </div>
             </form>
         </div>
@@ -131,11 +127,7 @@ const userSignUp = () => {
 
                         <p>* Champs obligatoires</p>
 
-                        <RouterLink to="/my-account">
-                            <MainButton type="submit" class="main-button">
-                                Valider
-                            </MainButton>
-                        </RouterLink>
+                        <MainButton type="submit" class="main-button"> Valider</MainButton>
                     </div>
                 </form>
             </div>
