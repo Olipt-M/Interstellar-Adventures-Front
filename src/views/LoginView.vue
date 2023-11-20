@@ -21,7 +21,9 @@ const userSignUp = () => {
     // console.log(user.value);
     signUp ({
         email: user.value.email, 
-        password: user.value.password, 
+        email_confirmation: user.value.confEmail,
+        password: user.value.password,
+        password_confirmation: user.value.confPassword,
         firstname: user.value.firstname, 
         lastname: user.value.lastname
     })
@@ -88,7 +90,7 @@ const userSignIn = () => {
                             </div>
                             <div class="form-item-group">
                                 <label for="inputEmailConfirm">Confirmer email *</label>
-                                <input type="email" name="emailConfirm" id="inputEmailConfirm" v-model="user.confEmail"/>
+                                <input type="email" name="email_confirmation" id="inputEmailConfirm" v-model="user.confEmail"/>
                             </div>
                         </div>
                         <div class="form-group">
@@ -98,7 +100,7 @@ const userSignIn = () => {
                             </div>
                             <div class="form-item-group">
                                 <label for="inputPasswordConfirm">Confirmer le mot de passe *</label>
-                                <input type="password" name="passwordConfirm" id="inputPasswordConfirm" v-model="user.confPassword"/>
+                                <input type="password" name="password_confirmation" id="inputPasswordConfirm" v-model="user.confPassword"/>
                             </div>
                         </div>
                         <div class="form-group">
