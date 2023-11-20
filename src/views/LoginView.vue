@@ -1,126 +1,210 @@
 <script setup>
 import H1TitleLayout from '@/components/layouts/H1TitleLayout.vue';
+import MainButton from '@/components/buttons/MainButton.vue';
+import { signIn, signUp } from '@/services/api.js';
 import { ref } from "vue";
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const displayLogin = ref(true);
 
+const user = ref({
+  email: "",
+  confEmail: "",
+  password: "",
+  confPassword: "",
+  firstname: "",
+  lastname: "",
+});
+
+const userSignUp = () => {
+    console.log(user.value);
+    signUp ({
+        email: user.value.email, 
+        password: user.value.password, 
+        firstname: user.value.firstname, 
+        lastname: user.value.lastname
+    })
+    .then(() => router.push({ name: 'account' }))
+    .catch(error => console.error(error));
+}
+
+const userSignIn = () => {
+    console.log(user.value);
+    signIn ({
+        email: user.value.email, 
+        password: user.value.password
+    })
+    .then(() => router.push({ name: 'account' }))
+    .catch(error => console.error(error));
+}
 </script>
 
 <template>
-    <H1TitleLayout>Interstellar Adventures</H1TitleLayout>
     <main>
+        <H1TitleLayout v-if="displayLogin">Connexion</H1TitleLayout>
+        <H1TitleLayout v-else>Inscription</H1TitleLayout>
+
         <div class="container-form">
             <div class="container-btn">
                 <input type="radio" name="btn" class="btn connexion" id="btn_co" value="formLogin"
                     @click="!displayLogin ? displayLogin = !displayLogin : null" checked>
                 <label for="btn_co" class="btn connexion">Connexion</label>
 
-                <input type="radio" name="btn" class="btn inscription" id="btn_ins" value="formSignin"
+                <input type="radio" name="btn" class="btn inscription" id="btn_ins" value="formSignIn"
                     @click="displayLogin ? displayLogin = !displayLogin : null">
                 <label for="btn_ins" class="btn inscription">Inscription</label>
             </div>
-            <form action="" v-if="displayLogin">
-                <div class="container-login">
-                    <div class="container-input-login">
-                        <label for="email">Email :</label>
-                        <input type="email" id="email" placeholder="myemail@mail.com">
-                    </div>
-                    <div class="container-input-login">
-                        <label for="password">Mot de passe :</label>
-                        <input type="password" id="password" placeholder="**********">
-                    </div>
-                </div>
-            </form>
+        </div>
 
-            <form action="" v-else="!displayLogin">
-                <div class="container-signin">
-                    <div class="container-signin-paired">
-                        <div class="container-input-signin">
-                            <label for="firstname">Prénom :</label>
-                            <input type="text" id="firstname" placeholder="Hector">
+        <div v-if="displayLogin">
+            <form id="login" method="POST" @submit.prevent="userSignIn">
+                <div class="login-container">
+                    <div class="form-group">
+                        <div class="form-item-group">
+                            <label for="inputEmail">Email</label>
+                            <input type="email" name="email" v-model="user.email"/>
                         </div>
-                        <div class="lign-form-middle">
-                        </div>
-                        <div class="container-input-signin">
-                            <label for="lastname">Nom :</label>
-                            <input type="text" id="lastname" placeholder="Lilas">
-                        </div>
-                    </div>
-                    <div class="container-signin-paired">
-                        <div class="container-input-signin">
-                            <label for="email">Email :</label>
-                            <input type="email" id="email" placeholder="myemail@mail.com">
-                        </div>
-                        <div class="lign-form-middle">
-                        </div>
-                        <div class="container-input-signin">
-                            <label for="confEmail">Confirmation de l'email :</label>
-                            <input type="email" id="confEmail" placeholder="myemail@mail.com">
+                        <div class="form-item-group">
+                            <label for="inputPassword">Mot de passe</label>
+                            <input type="password" name="password" v-model="user.password"/>
                         </div>
                     </div>
-
-                    <div class="container-signin-paired">
-                        <div class="container-input-signin">
-                            <label for="password">Mot de passe :</label>
-                            <input type="password" id="password" placeholder="**********">
-                        </div>
-                        <div class="lign-form-middle">
-                        </div>
-                        <div class="container-input-signin">
-                            <label for="confPassword">Confirmation du mot de passe :</label>
-                            <input type="password" id="confPassword" placeholder="**********">
-                        </div>
-                    </div>
+                    <MainButton type="submit" class="main-button">Valider</MainButton>
                 </div>
             </form>
         </div>
+
+        <section id="createAccount">
+            <div v-if="!displayLogin">
+                <form method="POST" @submit.prevent="userSignUp">
+                    <div class="container">
+                        <div class="form-group">
+                            <div class="form-item-group">
+                                <label for="inputEmail">Email *</label>
+                                <input type="email" name="email" id="email" v-model="user.email"/>
+                            </div>
+                            <div class="form-item-group">
+                                <label for="inputEmailConfirm">Confirmer email *</label>
+                                <input type="email" name="emailConfirm" id="inputEmailConfirm" v-model="user.confEmail"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-item-group">
+                                <label for="inputPassword">Mot de passe *</label>
+                                <input type="password" name="password" id="inputPassword" v-model="user.password"/>
+                            </div>
+                            <div class="form-item-group">
+                                <label for="inputPasswordConfirm">Confirmer le mot de passe *</label>
+                                <input type="password" name="passwordConfirm" id="inputPasswordConfirm" v-model="user.confPassword"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-item-group">
+                                <label for="inputFirstname">Prénom *</label>
+                                <input type="text" name="firstname" id="inputFirstname" v-model="user.firstname"/>
+                            </div>
+                            <div class="form-item-group">
+                                <label for="inputLastname">Nom *</label>
+                                <input type="text" name="lastname" id="inputLastname" v-model="user.lastname"/>
+                            </div>
+                        </div>
+
+                        <p>* Champs obligatoires</p>
+
+                        <MainButton type="submit" class="main-button"> Valider</MainButton>
+                    </div>
+                </form>
+            </div>
+        </section>
     </main>
 </template>
 
-<style lang='scss' scoped>
-@import '../assets/variables';
 
-body {
-    height: 100vh;
-    width: 100vw;
-    padding: 0;
-    margin: 0;
-    background-color: $color-dark-blue1;
+<style lang='scss' scoped>
+
+.main-button {
+    display: block;
+    margin: 0 auto;
 }
 
-main {
+p {
+    text-align: center;
+    color: $color-light;
+}
+
+#createAccount {
+    width: 90vw;
+    margin: 1rem auto;
+    padding: 3rem;
+    box-sizing: border-box;
+}
+
+#login{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    margin: 5rem auto;
+    background-color: $color-dark-blue2;
+    width: 40vw;
+    padding: 3rem;
+    box-sizing: border-box;
+    border-radius: 1rem;
+
+    .login-container {
+        padding: 2rem;
+    }
+
+    form {
+        width: 90%;
+        padding: 4rem;
+
+        label {
+            display: none;
+        }
+
+        input {
+            width: 100%;
+            margin-bottom: 2rem;
+            border-radius: 0.5rem;
+        }
+
+        input:not([type="submit"]) {
+            background: transparent;
+            color: $color-light;
+            border: 0.1rem solid $color-dark-blue2;
+            padding: 1rem 1.5rem;
+
+            &:focus {
+                outline: 0;
+                border-color: darken($color-night-blue, 15%);
+            }
+        }
+    }
+
+    .btn {
+        display: block;
+        margin: 0 auto;
+        width: 50%;
+    }
+}
+
+.container-btn{
     display: flex;
     justify-content: center;
-    height: calc(100vh - 200px);
+    align-items: center;
+    background-color: $color-dark-blue1;
 }
 
 .container-form {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    width: 80%;
-    border: 1px solid $color-light;
-    border-radius: 1rem;
-    margin-top: 2rem;
     background-color: $color-dark-blue2;
-}
-
-.container-btn {
-    display: flex;
-    flex-direction: row;
-    width: 80%;
-    margin-top: 7rem;
-    margin-bottom: 7rem;
-
-    .btn.connexion {
-        border-radius: 0.3rem 0 0 0.3rem;
-        text-align: center;
-    }
-
-    .btn.inscription {
-        border-radius: 0 0.3rem 0.3rem 0;
-        text-align: center;
-    }
+    width: fit-content;
+    margin: 2.5rem auto;
 }
 
 input[type="radio"].btn {
@@ -129,13 +213,21 @@ input[type="radio"].btn {
 
 input[type="radio"].btn+label {
     width: 50%;
-    border: 1px solid transparent;
+    border: 1px solid;
+    border-radius: 0.5rem;
+    margin: 0.5rem;
     padding: 1.5rem;
     font-size: 2rem;
     font-weight: bold;
-    color: black;
+    color: $color-light;
+    text-align: center;
     transition: all 0.5s ease-in-out;
-    background-color: #9DC1D7;
+    background-color: $color-dark-blue2;
+
+    &:hover {
+        background-color: $color-dark-blue1;
+        border-color: $color-light;
+    }
 
     @media (width <=$lg-breakpoint ) {
         font-size: 2.5rem;
@@ -143,139 +235,63 @@ input[type="radio"].btn+label {
 }
 
 input[type="radio"].btn:checked+label {
-    background-color: $color-light;
+    background-color: $color-dark-blue1;
     border-color: $color-light;
 }
 
-.container-login {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.container {
+    background: $color-dark-blue2;
+    padding: 4rem;
+    border-radius: 1rem;
 }
-
-.container-signin {
+.form-group {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
+    justify-content: space-around;
 
-    @media (width <=$sm-breakpoint) {
-        align-items: flex-end;
-    }
-}
+    .form-item-group {
+        flex-basis: 45%;
+        margin-bottom: 3rem;
 
-.container-signin-paired {
-    display: flex;
-
-    @media (width <=$sm-breakpoint) {
+        display: flex;
         flex-direction: column;
-        align-items: flex-start
-    }
-}
+        text-align: left;
 
-.container-input-login {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 5rem;
-
-    label {
-        margin-bottom: 1rem;
-        color: $color-light;
-
-        @media (width <=$lg-breakpoint ) {
-            font-size: 2rem;
-        }
-    }
-
-    input {
-        border-style: none;
-        border-radius: 0.5rem;
-        padding-left: 1rem;
-
-        @media (width <=$lg-breakpoint ) {
-            width: 30rem;
-            border-style: none;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            font-size: 2rem;
-        }
-    }
-}
-
-.container-input-signin {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-
-    @media (width <=$sm-breakpoint) {
-        margin-right: 0;
-        margin-bottom: 2rem;
+        
     }
 
     label {
+        text-transform: uppercase;
+        font-size: 1.4rem;
         margin-bottom: 1rem;
         color: $color-light;
-
-        @media (min-width: $lg-breakpoint ) {
-            font-size: 2rem;
-        }
     }
 
     input {
-        width: 10rem;
-        border-style: none;
-        border-radius: 0.5rem;
-        padding-left: 1rem;
+        background: $color-light;
+        color: $color-night-blue;
+        border: 0.1rem solid $color-night-blue;
+        padding: 1rem 1.5rem;
 
-        @media (width <=$sm-breakpoint) {
-            width: 25rem;
-            padding: 0.5rem;
-            font-size: 1.5rem;
-        }
-
-        @media ($sm-breakpoint < width <=$md-breakpoint ) {
-            width: 20rem;
-            padding: 1rem;
-            font-size: 1.5rem;
-        }
-
-        @media (min-width: $lg-breakpoint) {
-            width: 30rem;
-            padding: 1rem;
-            font-size: 2rem;
+        &:focus {
+            outline: 0;
+            border-color: darken($color-dark-blue2, 35%);
         }
     }
 }
 
-
-input:focus {
-    outline: none;
+input[type="submit"] {
+    width: 50%;
+    cursor: pointer;
 }
 
-// input[type="submit"] {
-//     width: 24%;
-//     margin-left: 38%;
-//     margin-top: 2%;
-//     margin-bottom: 7%;
-//     padding: 1rem;
-//     font-size: 2rem;
-// }
+.reset-password {
+    color: $color-night-blue;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 2rem;
 
-// @media (width <= $sm-breakpoint) {
-
-// }
-
-// @media ($sm-breakpoint < width <= $md-breakpoint ) {
-
-// }
-
-// @media (width <= $lg-breakpoint ) {
-
-// }
-
-// @media (width <= $xl-breakpoint ) {
-
-// }
-
-// pas besoin de préciser que la width est > à breakpoint précédent </style>
+    &:hover {
+        color: darken($color-dark-blue2, 15%);
+    }
+}
+</style> 

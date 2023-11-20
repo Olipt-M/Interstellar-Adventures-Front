@@ -27,3 +27,11 @@ export const getJourneyTypes = async () => {
 export const registerJourney = async (journey) => {
   return api(`/journeys`, { method: 'POST', body: journey });
 }
+
+export const signUp = async (credentials) => {
+  return api(`/auth/register`, { method: 'POST', body: credentials });
+}
+
+export const signIn = async (credentials) => {
+  return api(`/auth/login`, { method: 'POST', body: credentials });
+}

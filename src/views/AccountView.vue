@@ -4,6 +4,8 @@
 
 <template>
   <H1TitleLayout>Mon compte</H1TitleLayout>
+
+  <!-- <p>Bienvenue sur votre compte {{ user.firstname }}</p> -->
 </template>
 
 <style lang='scss' scoped>
