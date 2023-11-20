@@ -8,7 +8,11 @@ export const useRecapStore = defineStore('recap', () => {
     journey.value = options;
   }
 
+  const resetJourney = () => {
+    journey.value = {};
+  }
+
   const getJourney = computed(() => journey.value);
 
-  return { journey, getJourney, setJourney };
+  return { journey, setJourney, resetJourney, getJourney };
 });

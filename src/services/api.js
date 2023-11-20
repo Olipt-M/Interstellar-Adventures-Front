@@ -23,3 +23,7 @@ export const getClimates = async () => {
 export const getJourneyTypes = async () => {
   return api(`/journey-types`, { method: 'GET' });
 }
+
+export const registerJourney = async (journey) => {
+  return api(`/journeys`, { method: 'POST', body: journey });
+}

@@ -111,7 +111,7 @@
       price: calculateJourneyPrice(selectedShipId.value)
     });
 
-    console.log(recapStore.getJourney);
+    // console.log(recapStore.getJourney);
     router.push({ name: 'recap'});
   }
 </script>
