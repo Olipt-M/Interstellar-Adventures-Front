@@ -3,56 +3,41 @@ import H1TitleLayout from '@/components/layouts/H1TitleLayout.vue';
 import MainButton from '@/components/buttons/MainButton.vue';
 import { signIn, signUp } from '@/services/api.js';
 import { ref } from "vue";
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const displayLogin = ref(true);
 
 const user = ref({
   email: "",
+  confEmail: "",
   password: "",
+  confPassword: "",
   firstname: "",
   lastname: "",
 });
 
-// const errorSignIn = ref(null);
-// const errorSignUp = ref(null);
-
-// const userSignIn = async() => {
-//   try {
-//     const response = await signIn({email: formData.value.email, password: formData.value.password});
-//     console.log(response);
-//   } catch (error) {
-//     errorSignIn.value = "Erreur de connexion. Veuillez réessayer.";
-//   }
-// };
-
-// const userSignUp = async () => {
-//   try {
-//     const response = await signUp({email: formData.value.email, password: formData.value.password, firstname: formData.value.firstname, lastname: formData.value.lastname});
-//     console.log(response);
-//   } catch (error) {
-//     errorSignUp.value = "Erreur d'inscription. Veuillez réessayer.";
-//   }
-// };
-
-const userSignIn = () => {
-    signIn ({
-        email: user.value.email, 
-        password: user.value.password
-    })
-    .then(() => console.log(user.value));
-}
-
 const userSignUp = () => {
+    console.log(user.value);
     signUp ({
         email: user.value.email, 
         password: user.value.password, 
         firstname: user.value.firstname, 
         lastname: user.value.lastname
     })
-    .then(() => console.log(user.value));
+    .then(() => router.push({ name: 'account' }))
+    .catch(error => console.error(error));
 }
 
-
+const userSignIn = () => {
+    console.log(user.value);
+    signIn ({
+        email: user.value.email, 
+        password: user.value.password
+    })
+    .then(() => router.push({ name: 'account' }))
+    .catch(error => console.error(error));
+}
 </script>
 
 <template>
@@ -206,8 +191,6 @@ p {
     }
 }
 
-
-
 .container-btn{
     display: flex;
     justify-content: center;
@@ -311,6 +294,4 @@ input[type="submit"] {
         color: darken($color-dark-blue2, 15%);
     }
 }
-
 </style> 
-
