@@ -35,6 +35,11 @@ export const registerJourney = async (journey) => {
 export const getJourneys = async () => {
   return api(`/journeys`, { method: 'GET' });
 }
+// Récupère les voyages en fonction de l'id de l'utilisateur :
+
+// export const getUserJourneys = async (id) => {
+//   return api(`/users/${id}/journeys`, { method: 'GET' });
+// }
 
 export const signUp = async (credentials) => {
   return api(`/auth/register`, { method: 'POST', body: credentials });

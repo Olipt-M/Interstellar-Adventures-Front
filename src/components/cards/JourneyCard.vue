@@ -5,6 +5,7 @@
       required: true,
     }
   });
+  
 </script>
 
 <template>
@@ -17,9 +18,9 @@
       <p>{{ journey.journeyType.name }}</p>
         <div class="journey-duration">
             <p v-if="journey.journeyType.id === 2">
-                Du {{ journey.departureDate }} au {{ journey.returnDate }}
+                Du {{ journey.departure_date }} au {{ journey.return_date }}
             </p>
-            <p v-else>Départ le {{ journey.journeyType.departureDate }}</p>
+            <p v-else>Départ le {{ journey.journeyType.departure_date }}</p>
         </div>
     </div>
 
@@ -33,9 +34,13 @@
 
 .card-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   margin: 3rem 0;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
 }
 
 .img-planete-container {
@@ -43,33 +48,47 @@
   justify-content: center;
   align-items: center;
   border-radius: 1rem;
-  width: 450px;
+  width: 100%; 
+
+  img {
+    width: 100%; 
+    border-radius: 1rem;
+    max-width: 40rem; 
+    min-height: 25rem;
+    max-height: 25rem;
+  }
 }
+
 .description-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color : $color-light;
-  margin: 0 3rem;
-}
+  color: $color-light;
+  margin: 1rem 2rem 2rem 1rem;
 
-.description-container p{
+  p {
     border: 1px solid $color-light;
     background-color: $color-dark-blue3;
     border-radius: 0.5rem;
     padding: 0.75rem;
-    width: 10vw;
     text-align: center;
+    width: 100%; 
+    max-width: 20rem; 
+  }
 
-}
+  .journey-duration {
+    margin-top: 1rem;
 
-.duration-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color : $color-light;
+    p {
+      width: 100%; 
+    }
+  }
+
+  @media (min-width: 768px) {
+    flex: 1; 
+    margin: 0 1rem;
+  }
 }
 
 .img-ship-container {
@@ -77,14 +96,22 @@
   justify-content: center;
   align-items: center;
   border-radius: 1rem;
-  width: 450px;
+  width: 100%; 
+
+  img {
+    width: 100%; 
+    border-radius: 1rem;
+    max-width: 40rem; 
+    min-height: 25rem;
+    max-height: 25rem;
+  }
 }
 
-img {
-  border-radius: 1rem;
-  max-width: 40rem;
-  min-height: 25rem;
-  max-height: 25rem;
+@media (min-width: 768px) {
+  .img-ship-container {
+    max-width: 450px; 
+  }
 }
 
 </style>
+

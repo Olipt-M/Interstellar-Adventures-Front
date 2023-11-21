@@ -19,6 +19,7 @@
     <div class="container-form">
       <h2>Mes prochains voyages</h2>
       <JourneyCard v-for="(journey, index) in journeys" :key="index" :journey="journey"/>
+      <hr v-if="index < journeys.length - 1">
       <!-- <MainButton @click="displayMore()">Voir plus</MainButton> -->
     </div>
 </template>
@@ -31,22 +32,28 @@
   align-items: center;
   box-sizing: border-box;
   border-radius: 1rem;
-  margin: 3rem 6rem 6rem 6rem;
-  gap: 2rem;
-  padding: 2rem;
+  margin: 3rem 5rem 5rem 5rem;
+  gap: 1.5rem;
+  padding: 1.5rem;
   background : $color-dark-blue2;
 }
 
 h2 {
   color: $color-light;
   background-color: $color-dark-blue1;
+  margin: 3rem;
   border: 2px solid $color-light;
   border-radius: 1rem;
   padding: 0.75rem;
-  width: 73vw;
+  width: 70vw;
   text-align: center;
 }
 
+hr {
+    margin: 1rem auto;
+    width: 60%;
+    color: $color-light;
+  }
 </style>
 
 
