@@ -16,6 +16,10 @@ export const getShips = async () => {
   return api(`/ships`, { method: 'GET' });
 }
 
+export const getShip = async (id) => {
+  return api(`/ships/${id}`, { method: 'GET' });
+}
+
 export const getClimates = async () => {
   return api(`/climates`, { method: 'GET' });
 }
@@ -26,6 +30,10 @@ export const getJourneyTypes = async () => {
 
 export const registerJourney = async (journey) => {
   return api(`/journeys`, { method: 'POST', body: journey });
+}
+// Récupère TOUS les VOYAGES
+export const getJourneys = async () => {
+  return api(`/journeys`, { method: 'GET' });
 }
 
 export const signUp = async (credentials) => {
