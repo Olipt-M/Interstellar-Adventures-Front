@@ -5,6 +5,8 @@ import { signIn, signUp } from '@/services/api.js';
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
 const router = useRouter();
+import { useUserStore } from '@/stores/userStore.js';
+const userStore = useUserStore();
 
 const displayLogin = ref(true);
 
@@ -18,7 +20,6 @@ const user = ref({
 });
 
 const userSignUp = () => {
-    // console.log(user.value);
     signUp ({
         email: user.value.email, 
         email_confirmation: user.value.confEmail,
@@ -27,19 +28,24 @@ const userSignUp = () => {
         firstname: user.value.firstname, 
         lastname: user.value.lastname
     })
-    .then(response => console.log(response))
-    .then(() => router.push({ name: 'account' }))
+    // .then(response => console.log(response))
+    .then(response => {
+        userStore.authenticateUser(response);
+        router.push({ name: 'account' })
+    })
     .catch(error => console.error(error));
 }
 
 const userSignIn = () => {
-    // console.log(user.value);
     signIn ({
         email: user.value.email, 
         password: user.value.password
     })
-    .then(response => console.log(response))
-    .then(() => router.push({ name: 'account' }))
+    // .then(response => console.log(response))
+    .then(response => {
+        userStore.authenticateUser(response);
+        router.push({ name: 'account' })
+    })
     .catch(error => console.error(error));
 }
 </script>
