@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
-export const useRecapStore = defineStore('recap', () => {
+export const useUserStore = defineStore('user', () => {
   // User
   const user = ref(undefined);
 
@@ -15,9 +15,9 @@ export const useRecapStore = defineStore('recap', () => {
   const isAuthenticated = computed(() => {
     return user.value !== undefined && user.value !== null;
   })
-  const getAuthenticatedUser = () => {
+  const getAuthenticatedUser = computed(() => {
     return user.value;
-  }
+  })
 
   // Overlay when user is not authenticated
   const loginOverlay = ref(false);
@@ -29,9 +29,9 @@ export const useRecapStore = defineStore('recap', () => {
     loginOverlay.value = false;
   }
 
-  const isRequiredLoginOverlay = () => {
+  const isRequiredLoginOverlay = computed(() => {
     return loginOverlay.value;
-  }
+  })
 
   // Return variables
   return { 
