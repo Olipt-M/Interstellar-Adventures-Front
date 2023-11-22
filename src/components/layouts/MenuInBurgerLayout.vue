@@ -22,7 +22,7 @@
     <ul>
       <li><RouterLink :to="{name: 'home'}" class="li-text" @click="menuStore.closeMenu()">Accueil</RouterLink></li>
       <li><RouterLink :to="{name: 'planets'}" class="li-text" @click="menuStore.closeMenu()">Destinations</RouterLink></li>
-      <li><RouterLink :to="{name: 'account'}" class="li-text" @click="menuStore.closeMenu()">Mon compte</RouterLink></li>
+      <li v-if="userStore.isAuthenticated"><RouterLink :to="{name: 'account'}" class="li-text" @click="menuStore.closeMenu()">Mon compte</RouterLink></li>
       <li v-if="userStore.isAuthenticated"><RouterLink :to="{name: 'login'}" class="li-text" @click="disconnect">Déconnexion</RouterLink></li>
       <li v-else><RouterLink :to="{name: 'login'}" class="li-text" @click="menuStore.closeMenu()">Connexion</RouterLink></li>
     </ul>
