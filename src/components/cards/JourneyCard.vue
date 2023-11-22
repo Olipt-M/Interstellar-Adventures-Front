@@ -20,7 +20,7 @@
             <p v-if="journey.journeyType?.id === 2">
                 Du {{ journey.departure_date }} au {{ journey.return_date }}
             </p>
-            <p v-else>Départ le {{ journey.journeyType?.departure_date }}</p>
+            <p v-else>Départ le {{ journey.departure_date }}</p>
         </div>
     </div>
 
@@ -48,7 +48,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 1rem;
-  width: 100%; 
+  width: 100%;
 
   img {
     width: 100%; 
