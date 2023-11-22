@@ -16,7 +16,7 @@
       .catch(err => {
         console.error(err);
         err.value = "Erreur lors du chargement des voyages";
-      });
+    });
   }
 });
 
@@ -26,7 +26,10 @@
   <H1TitleLayout>Mon compte</H1TitleLayout>
     <div class="container-form">
       <h2>Mes prochains voyages</h2>
-      <JourneyCard v-for="(journey, userJourneys) in journeys" :key="userJourneys" :journey="journey"/>
+      <div v-for="(journey, index) in journeys" :key="journey.id">
+        <JourneyCard :journey="journey"/>
+        <hr v-if="index < journeys.length - 1">
+      </div>
     </div>
 </template>
 
