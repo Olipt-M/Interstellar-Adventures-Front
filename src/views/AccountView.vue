@@ -1,26 +1,32 @@
 <script setup>
   import H1TitleLayout from '@/components/layouts/H1TitleLayout.vue';
-  // import MainButton from '@/components/buttons/MainButton.vue';
   import JourneyCard from '@/components/cards/JourneyCard.vue';
-  import { getJourneys } from '@/services/api.js';
+  import { getUserJourneys } from '@/services/api.js';
   import { ref, onBeforeMount } from 'vue';
+  import { useUserStore } from '@/stores/userStore.js';
+  const userStore = useUserStore();
 
   const journeys = ref([]);
 
   onBeforeMount(() => {
-    getJourneys()
+  if (userStore.isAuthenticated) {
+    getUserJourneys(userStore.getAuthenticatedUser.id)
       .then(response => journeys.value = response)
-      .catch(error => console.error(error));
-  });
+      .then(() => console.log(journeys.value))
+      .catch(err => {
+        console.error(err);
+        err.value = "Erreur lors du chargement des voyages";
+      });
+  }
+});
+
 </script>
 
 <template>
   <H1TitleLayout>Mon compte</H1TitleLayout>
     <div class="container-form">
       <h2>Mes prochains voyages</h2>
-      <JourneyCard v-for="(journey, index) in journeys" :key="index" :journey="journey"/>
-      <hr v-if="index < journeys.length - 1">
-      <!-- <MainButton @click="displayMore()">Voir plus</MainButton> -->
+      <JourneyCard v-for="(journey, userJourneys) in journeys" :key="userJourneys" :journey="journey"/>
     </div>
 </template>
 

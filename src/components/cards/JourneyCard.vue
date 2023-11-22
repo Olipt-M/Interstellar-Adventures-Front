@@ -11,21 +11,21 @@
 <template>
   <div class="card-container">
     <div class="img-planete-container">
-      <img :src="`img-planetes/${journey.planet.picture}`" :alt="journey.planet.name">
+      <img :src="`img-planetes/${journey.planet?.picture}`" :alt="journey.planet?.name">
     </div>
 
     <div class="description-container">
-      <p>{{ journey.journeyType.name }}</p>
+      <p>{{ journey.journeyType?.name }}</p>
         <div class="journey-duration">
-            <p v-if="journey.journeyType.id === 2">
+            <p v-if="journey.journeyType?.id === 2">
                 Du {{ journey.departure_date }} au {{ journey.return_date }}
             </p>
-            <p v-else>Départ le {{ journey.journeyType.departure_date }}</p>
+            <p v-else>Départ le {{ journey.journeyType?.departure_date }}</p>
         </div>
     </div>
 
     <div class="img-ship-container">
-      <img :src="`img-vaisseaux/${journey.ship.picture}`" :alt="journey.ship.name">
+      <img :src="`img-vaisseaux/${journey.ship?.picture}`" :alt="journey.ship?.name">
     </div>
   </div>
 </template>
