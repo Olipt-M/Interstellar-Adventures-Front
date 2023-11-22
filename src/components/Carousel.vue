@@ -1,30 +1,22 @@
-<script>
-import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
-import 'vue3-carousel/dist/carousel.css';
-import { getPlanets } from '@/services/api.js';
-import { ref, onBeforeMount } from 'vue';
+<script setup>
+  import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
+  import 'vue3-carousel/dist/carousel.css';
+  import { getPlanets } from '@/services/api.js';
+  import { ref, onBeforeMount } from 'vue';
 
-export default {
-  components: {
-    Carousel,
-    Slide,
-    Pagination,
-    Navigation,
-},
-setup() {
-    const planets = ref([]);
-    onBeforeMount(async () => {
-      try {
-        const response = await getPlanets(1, 23);
-        planets.value = [...response.data].sort(() => Math.random() - 0.5).slice(0, 5); // [...] permet de créer une copie de la liste sans toucher à l'odre initial des planètes 
-      } catch (error) {
-        console.error('Erreur lors de la récupération des données des planètes :', error);
-      }
-    });
+  const planets = ref([]);
+
+  onBeforeMount(() => {
+    getPlanets(1, 23)
+    .then(response => planets.value = [...response.data].sort (() => Math.random() - 0.5).slice(0, 5))
+    .catch(error => {
+      console.error('Erreur lors de la création des données des planètes :', error);
+    })
     return { planets };
-  },
-};
-
+  });
+ 
+  // [...] permet de créer une copie de la liste sans toucher à l'odre initial des planètes 
+    
 </script>
 
 <template>
