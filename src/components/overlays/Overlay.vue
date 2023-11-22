@@ -1,18 +1,17 @@
-<template>
-  <div class="overlay-container" :class="{ opened }"><slot/></div>
-</template>
-
 <script setup>
   defineProps({
     opened: {
       type: Boolean,
-      required: false,
       default: false
     }
   });
 </script>
 
-<style scoped>
+<template>
+  <div class="overlay-container" :class="{ opened }"><slot/></div>
+</template>
+
+<style lang='scss' scoped>
   .overlay-container {
     position: fixed;
     top: 0;

@@ -3,8 +3,11 @@
   import FooterLayout from '@/components/layouts/FooterLayout.vue';
   import HeaderLayout from '@/components/layouts/HeaderLayout.vue';
   import Overlay from '@/components/overlays/Overlay.vue';
+  import OverlayNotConnected from '@/components/overlays/OverlayNotConnected.vue';
   import { useMenuStore } from '@/stores/menuStore.js';
   const menuStore = useMenuStore();
+  import { useUserStore } from '@/stores/userStore.js';
+  const userStore = useUserStore();
 </script>
 
 <template>
@@ -12,6 +15,7 @@
   <RouterView />
   <FooterLayout />
   <Overlay :opened="menuStore.isMenuBurgerOpened" @click="menuStore.closeMenu()"/>
+  <OverlayNotConnected :opened="userStore.isRequiredLoginOverlay"/>
 </template>
 
 <style lang='scss'>

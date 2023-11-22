@@ -4,28 +4,32 @@
   import { registerJourney } from '@/services/api.js';
   import { useRecapStore } from '@/stores/recapStore.js';
   const recapStore = useRecapStore();
+  import { useUserStore } from '@/stores/userStore.js';
+  const userStore = useUserStore();
   import { useRouter } from 'vue-router';
   const router = useRouter();
 
   const journey = recapStore.getJourney;
 
   const confirmJourney = () => {
-    // A FAIRE : D'abord vérifier si l'utilisateur est connecté
-
-    // A FAIRE : Lier le voyage à l'utilisateur
-    registerJourney({
-      ship_id: journey.ship.id,
-      planet_id: journey.planet.id,
-      journey_type_id: journey.journeyType.id,
-      departure_date: journey.departureDate,
-      return_date: journey.returnDate,
-      price: journey.price
-    })
-    .then(() => {
-      recapStore.resetJourney;
-      router.push({ name: 'account'});
-    })
-    .catch(error => console.error(error));
+    if (!userStore.isAuthenticated) {
+      userStore.openLoginOverlay();
+    } else {
+      registerJourney({
+        ship_id: journey.ship.id,
+        planet_id: journey.planet.id,
+        journey_type_id: journey.journeyType.id,
+        departure_date: journey.departureDate,
+        return_date: journey.returnDate,
+        price: journey.price,
+        userEmail: userStore.getAuthenticatedUser.email
+      })
+      .then(() => {
+        recapStore.resetJourney;
+        router.push({ name: 'account'});
+      })
+      .catch(error => console.error(error));
+    }
   }
 </script>
 
