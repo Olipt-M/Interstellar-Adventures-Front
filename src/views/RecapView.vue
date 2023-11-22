@@ -12,22 +12,24 @@
   const journey = recapStore.getJourney;
 
   const confirmJourney = () => {
-    // A FAIRE : D'abord vérifier si l'utilisateur est connecté
-
-    registerJourney({
-      ship_id: journey.ship.id,
-      planet_id: journey.planet.id,
-      journey_type_id: journey.journeyType.id,
-      departure_date: journey.departureDate,
-      return_date: journey.returnDate,
-      price: journey.price,
-      userEmail: userStore.getAuthenticatedUser.email
-    })
-    .then(() => {
-      recapStore.resetJourney;
-      router.push({ name: 'account'});
-    })
-    .catch(error => console.error(error));
+    if (!userStore.isAuthenticated) {
+      userStore.openLoginOverlay();
+    } else {
+      registerJourney({
+        ship_id: journey.ship.id,
+        planet_id: journey.planet.id,
+        journey_type_id: journey.journeyType.id,
+        departure_date: journey.departureDate,
+        return_date: journey.returnDate,
+        price: journey.price,
+        userEmail: userStore.getAuthenticatedUser.email
+      })
+      .then(() => {
+        recapStore.resetJourney;
+        router.push({ name: 'account'});
+      })
+      .catch(error => console.error(error));
+    }
   }
 </script>
 

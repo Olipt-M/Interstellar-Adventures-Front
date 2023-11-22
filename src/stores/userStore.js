@@ -8,9 +8,7 @@ export const useUserStore = defineStore('user', () => {
   const authenticateUser = (credentials) => {
     user.value = credentials;
   }
-  const disconnectUser = () => {
-    user.value = undefined;
-  }
+  const disconnectUser = () => user.value = undefined;
 
   const isAuthenticated = computed(() => {
     return user.value !== undefined && user.value !== null;
@@ -22,12 +20,8 @@ export const useUserStore = defineStore('user', () => {
   // Overlay when user is not authenticated
   const loginOverlay = ref(false);
 
-  const openLoginOverlay = () => {
-    loginOverlay.value = true;
-  }
-  const closeLoginOverlay = () => {
-    loginOverlay.value = false;
-  }
+  const openLoginOverlay = () => loginOverlay.value = true;
+  const closeLoginOverlay = () => loginOverlay.value = false;
 
   const isRequiredLoginOverlay = computed(() => {
     return loginOverlay.value;
