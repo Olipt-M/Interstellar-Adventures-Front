@@ -189,7 +189,6 @@
               colorMode="light" 
               class="main-button" 
               :class="{'disabled': !isFormCompleted}" 
-              :disabled="!isFormCompleted" 
               type="submit">
               Valider
             </MainButton>
