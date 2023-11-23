@@ -46,7 +46,7 @@
         <p>{{ journey.planet.name }}</p>
         <p>Votre voyage : {{ journey.journeyType.name }}</p>
         <p v-if="journey.journeyType.id === 2">Du {{ journey.departureDate.split('-').reverse().join('/') }} au {{ journey.returnDate.split('-').reverse().join('/') }}</p>
-        <p v-else>Départ le {{ journey.departureDate }}</p>
+        <p v-else>Départ le {{ journey.departureDate.split('-').reverse().join('/') }}</p>
         <p>Prix : {{ journey.price }} €</p>
         <p>Votre vaisseau : {{ journey.ship.name }}</p>
       </div>
@@ -114,15 +114,15 @@
       border-radius: 1rem;
       border: 1px solid rgba($color-light, 0.6);
       width: 100%;
-      height: 50vh;
+      height: 35rem;
       object-fit: cover;
       object-position: center;
 
       @media (max-width: $xl-breakpoint) {
-        height: 40vh;
+        height: 30rem;
       }
       @media (max-width: $md-breakpoint) {
-        height: 30vh;
+        height: 25rem;
       }
       @media (max-width: $sm-breakpoint) {
         border: none;
