@@ -72,11 +72,11 @@ const userSignIn = () => {
                 <div class="login-container">
                     <div class="form-group">
                         <div class="form-item-group">
-                            <label for="inputEmail">Email</label>
+                            <label for="email">Email</label>
                             <input type="email" name="email" v-model="user.email"/>
                         </div>
                         <div class="form-item-group">
-                            <label for="inputPassword">Mot de passe</label>
+                            <label for="password">Mot de passe</label>
                             <input type="password" name="password" v-model="user.password"/>
                         </div>
                     </div>
