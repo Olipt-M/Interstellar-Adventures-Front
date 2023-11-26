@@ -20,17 +20,13 @@
   const checkedJourneyTypesIds = ref([]);
 
   onBeforeMount(() => {
-    // getNbOfPlanets().then(response => nbOfPlanets.value = response);
-
-    setTimeout(() => {
-      getPlanets(page.value, maxPlanetsAtOnce.value)
-        .then(response => planets.value = response)
-        .then(response => planetsArray.value = response.data)
-        .then(() => nbOfPlanets.value = planets.value.meta.total)
-        // .then(() => console.log(planets.value))
-        .catch(error => console.error(error));
-      isViewLoaded.value = true;
-    }, "1500");
+    getPlanets(page.value, maxPlanetsAtOnce.value)
+      .then(response => planets.value = response)
+      .then(response => planetsArray.value = response.data)
+      .then(() => nbOfPlanets.value = planets.value.meta.total)
+      // .then(() => console.log(planets.value))
+      .catch(error => console.error(error));
+    isViewLoaded.value = true;
 
     getClimates()
       .then(response => climates.value = response)
@@ -44,14 +40,12 @@
   const displayMore = () => {
     isViewLoaded.value = false;
 
-    setTimeout(() => {
-      getPlanets(++page.value, maxPlanetsAtOnce.value)
-      .then(response => newPlanets.value = response)
-      .then(response => planetsArray.value = planetsArray.value.concat(response.data))
-      // .then(() => console.log(planetsArray.value))
-      .catch(error => console.error(error));
-      isViewLoaded.value = true;
-    }, "1000");
+    getPlanets(++page.value, maxPlanetsAtOnce.value)
+    .then(response => newPlanets.value = response)
+    .then(response => planetsArray.value = planetsArray.value.concat(response.data))
+    // .then(() => console.log(planetsArray.value))
+    .catch(error => console.error(error));
+    isViewLoaded.value = true;
   }
 
   // Filter planets

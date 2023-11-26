@@ -73,11 +73,11 @@ const userSignIn = () => {
                     <div class="form-group">
                         <div class="form-item-group">
                             <label for="email">Email</label>
-                            <input type="email" name="email" v-model="user.email"/>
+                            <input type="email" name="email" v-model="user.email" autocomplete="email"/>
                         </div>
                         <div class="form-item-group">
                             <label for="password">Mot de passe</label>
-                            <input type="password" name="password" v-model="user.password"/>
+                            <input type="password" name="password" v-model="user.password" autocomplete="current-password"/>
                         </div>
                     </div>
                     <MainButton type="submit" class="main-button">Valider</MainButton>
@@ -91,32 +91,33 @@ const userSignIn = () => {
                     <div class="container">
                         <div class="form-group">
                             <div class="form-item-group">
+                                <label for="inputFirstname">Prénom *</label>
+                                <input type="text" name="firstname" id="inputFirstname" v-model="user.firstname" autocomplete="given-name"/>
+                            </div>
+                            <div class="form-item-group">
+                                <label for="inputLastname">Nom *</label>
+                                <input type="text" name="lastname" id="inputLastname" v-model="user.lastname" autocomplete="family-name"/>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="form-item-group">
                                 <label for="inputEmail">Email *</label>
-                                <input type="email" name="email" id="email" v-model="user.email"/>
+                                <input type="email" name="email" id="email" v-model="user.email" autocomplete="email"/>
                             </div>
                             <div class="form-item-group">
                                 <label for="inputEmailConfirm">Confirmer email *</label>
-                                <input type="email" name="email_confirmation" id="inputEmailConfirm" v-model="user.confEmail"/>
+                                <input type="email" name="email_confirmation" id="inputEmailConfirm" v-model="user.confEmail" autocomplete="email"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="form-item-group">
                                 <label for="inputPassword">Mot de passe *</label>
-                                <input type="password" name="password" id="inputPassword" v-model="user.password"/>
+                                <input type="password" name="password" id="inputPassword" v-model="user.password" autocomplete="current-password"/>
                             </div>
                             <div class="form-item-group">
                                 <label for="inputPasswordConfirm">Confirmer le mot de passe *</label>
-                                <input type="password" name="password_confirmation" id="inputPasswordConfirm" v-model="user.confPassword"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-item-group">
-                                <label for="inputFirstname">Prénom *</label>
-                                <input type="text" name="firstname" id="inputFirstname" v-model="user.firstname"/>
-                            </div>
-                            <div class="form-item-group">
-                                <label for="inputLastname">Nom *</label>
-                                <input type="text" name="lastname" id="inputLastname" v-model="user.lastname"/>
+                                <input type="password" name="password_confirmation" id="inputPasswordConfirm" v-model="user.confPassword" autocomplete="current-password"/>
                             </div>
                         </div>
 
