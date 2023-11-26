@@ -23,7 +23,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 3rem;
+    padding: 2rem 3rem;
   }
 
   p {

@@ -24,9 +24,21 @@
   li {
   display: inline-block;
   margin-right: 2rem;
+  position: relative;
+  padding-block: 1rem;
 
-  &:hover {
-    font-style: italic;
+  &::after {
+    content: '';
+    border-bottom: 2px solid $color-light;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    transition: width 0.3s ease-in-out;
+  }
+
+  &:hover::after {
+    width: 100%;
   }
 }
 

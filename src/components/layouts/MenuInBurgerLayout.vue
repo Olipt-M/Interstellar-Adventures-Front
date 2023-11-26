@@ -68,8 +68,14 @@
     color: $color-light;
   }
 
+  .close-icon:hover {
+    transform: rotate(-180deg);
+    transition: transform 0.6s ease-in-out;
+  }
+
   ul {
     margin: 0;
+    padding: 0;
   }
   
   li {
@@ -89,11 +95,6 @@
     width: 100%;
     text-decoration: none;
     color: $color-light;
-  }
-
-  .close-icon:hover {
-    transform: rotate(-180deg);
-    transition: transform 0.6s ease-in-out;
   }
   
 </style>
