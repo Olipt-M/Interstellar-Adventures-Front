@@ -80,6 +80,7 @@
   };
 
   // Submit journey
+  // Check if form is completed
   const isFormCompleted = computed(() => {
     if (selectedJourneyType.value === null || selectedShipId.value === null) {
       return false;
@@ -100,19 +101,45 @@
     }
   });
 
-  const submitJourney = () => {
-    recapStore.setJourney({
-      planet: planet.value,
-      journeyType: planet.value.journeyTypes.find(type => type.id === selectedJourneyType.value),
-      departureDate: departureDate.value,
-      returnDate: returnDate.value,
-      journeyDuration: journeyDuration.value,
-      ship: ships.value.find(ship => ship.id === selectedShipId.value),
-      price: calculateJourneyPrice(selectedShipId.value)
-    });
+  // Check if dates are valid
+  const checkDepartureDate = () => {
+    if (departureDate.value === null || departureDate.value < getCurrentDate().split('-').reverse().join('-')) {
+      recapStore.setDepartureErrorMessage("La date de départ doit au minimum correspondre à la date actuelle.");
+      return false;
+    } else {
+      recapStore.resetDepartureErrorMessage();
+      return true;
+    }
+  }
 
-    // console.log(recapStore.getJourney);
-    router.push({ name: 'recap'});
+  const checkReturnDate = () => {
+    if (returnDate.value === null || returnDate.value < departureDate.value) {
+      recapStore.setReturnErrorMessage("La date de retour doit au minimum correspondre à la date de départ.");
+      return false;
+    } else {
+      recapStore.resetReturnErrorMessage();
+      return true;
+    }
+  }
+
+  // Submit form
+  const submitJourney = () => {
+    if (checkDepartureDate() && ((selectedJourneyType.value === 2 && checkReturnDate()) || selectedJourneyType.value !== 2)) {
+      recapStore.setJourney({
+        planet: planet.value,
+        journeyType: planet.value.journeyTypes.find(type => type.id === selectedJourneyType.value),
+        departureDate: departureDate.value,
+        returnDate: returnDate.value,
+        journeyDuration: journeyDuration.value,
+        ship: ships.value.find(ship => ship.id === selectedShipId.value),
+        price: calculateJourneyPrice(selectedShipId.value)
+      });
+
+      router.push({ name: 'recap'});
+
+    } else {
+      router.push({ name: 'planet'});
+    }
   }
 </script>
 
@@ -158,12 +185,14 @@
 
             <div class="form-group">
               <label for="departureDate">Date de départ:</label>
-              <input type="date" v-model="departureDate" :min="getCurrentDate()">
+              <p v-if="recapStore.getErrorMessages.departureDate !== ''" class="error-message">{{ recapStore.getErrorMessages.departureDate }}</p>
+              <input type="date" v-model="departureDate">
             </div>
 
             <div v-if="selectedJourneyType === 2" class="form-group">
               <label for="returnDate" >Date de retour:</label>
-              <input type="date" v-model="returnDate" :min="departureDate">
+              <p v-if="recapStore.getErrorMessages.returnDate !== ''" class="error-message">{{ recapStore.getErrorMessages.returnDate }}</p>
+              <input type="date" v-model="returnDate">
             </div>
           </div>
 
@@ -317,6 +346,16 @@
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
+    margin-top: 1.5rem;
+
+    input {
+      text-align: center;
+    }
+  }
+
+  .error-message {
+    color: $color-alert;
+    margin-block: 0;
   }
 
   .ships-flex-container {
