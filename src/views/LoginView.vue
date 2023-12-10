@@ -19,6 +19,8 @@ const user = ref({
   lastname: "",
 });
 
+const errorMessage = ref('');
+
 const userSignUp = () => {
     signUp ({
         email: user.value.email, 
@@ -35,7 +37,6 @@ const userSignUp = () => {
     })
     .catch(error => console.error(error));
 }
-
 const userSignIn = () => {
     signIn ({
         email: user.value.email, 
@@ -46,7 +47,10 @@ const userSignIn = () => {
         userStore.authenticateUser(response);
         router.push({ name: 'account' })
     })
-    .catch(error => console.error(error));
+    .catch(error => {
+        errorMessage.value = error.data.message;
+        throw errorMessage.value;
+    });
 }
 </script>
 
@@ -80,6 +84,9 @@ const userSignIn = () => {
                             <input type="password" name="password" v-model="user.password" autocomplete="current-password"/>
                         </div>
                     </div>
+
+                    <p v-if="errorMessage" class="errorMessage">{{ errorMessage }}</p>
+
                     <MainButton type="submit" class="main-button">Valider</MainButton>
                 </div>
             </form>
@@ -292,5 +299,14 @@ input[type="radio"].btn:checked+label {
             border-color: darken($color-dark-blue2, 35%);
         }
     }
+}
+
+.login-container .form-group {
+    display: flex;
+    gap: 3rem;
+}
+
+.errorMessage {
+    color: $color-alert;
 }
 </style> 
