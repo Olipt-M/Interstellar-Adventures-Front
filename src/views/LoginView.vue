@@ -232,12 +232,13 @@ input[type="radio"].btn+label {
     font-weight: bold;
     color: $color-light;
     text-align: center;
-    transition: all 0.5s ease-in-out;
+    transition: all 0.3s ease-in-out;
     background-color: $color-dark-blue2;
 
     &:hover {
-        background-color: $color-dark-blue1;
+        background-color: $color-light;
         border-color: $color-light;
+        color: $color-night-blue;
     }
 
     @media (width <=$lg-breakpoint ) {
@@ -246,8 +247,9 @@ input[type="radio"].btn+label {
 }
 
 input[type="radio"].btn:checked+label {
-    background-color: $color-dark-blue1;
+    background-color: $color-light;
     border-color: $color-light;
+    color: $color-night-blue;
 }
 
 .container {
@@ -267,7 +269,9 @@ input[type="radio"].btn:checked+label {
         flex-direction: column;
         text-align: left;
 
-        
+        input {
+            border-radius: 1rem;
+        }
     }
 
     label {
@@ -287,22 +291,6 @@ input[type="radio"].btn:checked+label {
             outline: 0;
             border-color: darken($color-dark-blue2, 35%);
         }
-    }
-}
-
-input[type="submit"] {
-    width: 50%;
-    cursor: pointer;
-}
-
-.reset-password {
-    color: $color-night-blue;
-    text-decoration: none;
-    display: block;
-    margin-bottom: 2rem;
-
-    &:hover {
-        color: darken($color-dark-blue2, 15%);
     }
 }
 </style> 

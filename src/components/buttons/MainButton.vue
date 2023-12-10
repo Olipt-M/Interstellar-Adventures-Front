@@ -22,6 +22,7 @@
       border: 1px solid $color-light;
       background: $color-light;
       color: $color-night-blue;
+      transition: all 0.3s ease-in-out;
 
       &:hover {
         background: $color-dark-blue1;
@@ -33,6 +34,7 @@
       border: 1px solid $color-light;
       background: $color-dark-blue1;
       color: $color-light;
+      transition: all 0.3s ease-in-out;
 
       &:hover {
         background: $color-light;
