@@ -35,7 +35,7 @@ const userSignUp = () => {
         userStore.authenticateUser(response);
         router.push({ name: 'account' })
     })
-    .catch(error => console.error(error));
+    .catch(error => errorMessage.value = error.data.errors);
 }
 const userSignIn = () => {
     signIn ({
@@ -127,6 +127,8 @@ const userSignIn = () => {
                                 <input type="password" name="password_confirmation" id="inputPasswordConfirm" v-model="user.confPassword" autocomplete="current-password"/>
                             </div>
                         </div>
+
+                        <p v-if="errorMessage" class="errorMessage">{{ errorMessage }}</p>
 
                         <p>* Champs obligatoires</p>
 
