@@ -7,6 +7,8 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 import { useUserStore } from '@/stores/userStore.js';
 const userStore = useUserStore();
+import { useRecapStore } from '@/stores/recapStore.js';
+const recapStore = useRecapStore();
 
 const displayLogin = ref(true);
 
@@ -19,6 +21,22 @@ const user = ref({
   lastname: "",
 });
 
+const isAJourneyInRecap = () => {
+    if (Object.keys(recapStore.getJourney).length === 0) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+const redirectUser = () => {
+    if (isAJourneyInRecap()) {
+        router.push({ name: 'recap' })
+    } else {
+        router.push({ name: 'account' })
+    }
+}
+
 const errorMessage = ref('');
 
 const userSignUp = () => {
@@ -30,10 +48,9 @@ const userSignUp = () => {
         firstname: user.value.firstname, 
         lastname: user.value.lastname
     })
-    // .then(response => console.log(response))
     .then(response => {
         userStore.authenticateUser(response);
-        router.push({ name: 'account' })
+        redirectUser();
     })
     .catch(error => errorMessage.value = error.data.errors);
 }
@@ -42,10 +59,9 @@ const userSignIn = () => {
         email: user.value.email, 
         password: user.value.password
     })
-    // .then(response => console.log(response))
     .then(response => {
         userStore.authenticateUser(response);
-        router.push({ name: 'account' })
+        redirectUser();
     })
     .catch(error => {
         errorMessage.value = error.data.message;

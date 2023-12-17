@@ -12,7 +12,6 @@
   if (userStore.isAuthenticated) {
     getUserJourneys(userStore.getAuthenticatedUser.id)
       .then(response => journeys.value = response)
-      .then(() => console.log(journeys.value))
       .catch(err => {
         console.error(err);
         err.value = "Erreur lors du chargement des voyages";
