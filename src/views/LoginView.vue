@@ -65,7 +65,6 @@ const userSignIn = () => {
     })
     .catch(error => {
         errorMessage.value = error.data.message;
-        throw errorMessage.value;
     });
 }
 </script>
@@ -112,39 +111,64 @@ const userSignIn = () => {
             <div v-if="!displayLogin">
                 <form method="POST" @submit.prevent="userSignUp">
                     <div class="container">
-                        <div class="form-group">
-                            <div class="form-item-group">
-                                <label for="inputFirstname">Prénom *</label>
-                                <input type="text" name="firstname" id="inputFirstname" v-model="user.firstname" autocomplete="given-name"/>
-                            </div>
-                            <div class="form-item-group">
-                                <label for="inputLastname">Nom *</label>
-                                <input type="text" name="lastname" id="inputLastname" v-model="user.lastname" autocomplete="family-name"/>
+                        <div class="form-line">
+                            <div class="form-group">
+                                <div class="form-item-group">
+                                    <label for="inputFirstname">Prénom *</label>
+                                    <input type="text" name="firstname" id="inputFirstname" v-model="user.firstname" autocomplete="given-name"/>
+                                    <div v-if="errorMessage && errorMessage.hasOwnProperty('firstname')" class="errorMessage">
+                                        <ul>
+                                            <li v-for="error in errorMessage.firstname">{{ error }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="form-item-group">
+                                    <label for="inputLastname">Nom *</label>
+                                    <input type="text" name="lastname" id="inputLastname" v-model="user.lastname" autocomplete="family-name"/>
+                                    <div v-if="errorMessage && errorMessage.hasOwnProperty('lastname')" class="errorMessage">
+                                        <ul>
+                                            <li v-for="error in errorMessage.lastname">{{ error }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="form-group">
-                            <div class="form-item-group">
-                                <label for="inputEmail">Email *</label>
-                                <input type="email" name="email" id="email" v-model="user.email" autocomplete="email"/>
+                        <div class="form-line">
+                            <div class="form-group">
+                                <div class="form-item-group">
+                                    <label for="inputEmail">Email *</label>
+                                    <input type="email" name="email" id="email" v-model="user.email" autocomplete="email"/>
+                                </div>
+                                <div class="form-item-group">
+                                    <label for="inputEmailConfirm">Confirmer email *</label>
+                                    <input type="email" name="email_confirmation" id="inputEmailConfirm" v-model="user.confEmail" autocomplete="email"/>
+                                </div>
                             </div>
-                            <div class="form-item-group">
-                                <label for="inputEmailConfirm">Confirmer email *</label>
-                                <input type="email" name="email_confirmation" id="inputEmailConfirm" v-model="user.confEmail" autocomplete="email"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-item-group">
-                                <label for="inputPassword">Mot de passe *</label>
-                                <input type="password" name="password" id="inputPassword" v-model="user.password" autocomplete="current-password"/>
-                            </div>
-                            <div class="form-item-group">
-                                <label for="inputPasswordConfirm">Confirmer le mot de passe *</label>
-                                <input type="password" name="password_confirmation" id="inputPasswordConfirm" v-model="user.confPassword" autocomplete="current-password"/>
+                            <div v-if="errorMessage && errorMessage.hasOwnProperty('email')" class="errorMessage errorEmailPassword">
+                                <ul>
+                                    <li v-for="error in errorMessage.email">{{ error }}</li>
+                                </ul>
                             </div>
                         </div>
 
-                        <p v-if="errorMessage" class="errorMessage">{{ errorMessage }}</p>
+                        <div class="form-line">
+                            <div class="form-group">
+                                <div class="form-item-group">
+                                    <label for="inputPassword">Mot de passe *</label>
+                                    <input type="password" name="password" id="inputPassword" v-model="user.password" autocomplete="current-password"/>
+                                </div>
+                                <div class="form-item-group">
+                                    <label for="inputPasswordConfirm">Confirmer le mot de passe *</label>
+                                    <input type="password" name="password_confirmation" id="inputPasswordConfirm" v-model="user.confPassword" autocomplete="current-password"/>
+                                </div>
+                            </div>
+                            <div v-if="errorMessage && errorMessage.hasOwnProperty('password')" class="errorMessage errorEmailPassword">
+                                <ul>
+                                    <li v-for="error in errorMessage.password">{{ error }}</li>
+                                </ul>
+                            </div>
+                        </div>
 
                         <p>* Champs obligatoires</p>
 
@@ -282,13 +306,23 @@ input[type="radio"].btn:checked+label {
     padding: 4rem;
     border-radius: 1rem;
 }
+
+.form-line {
+    margin-bottom: 3rem;
+    .errorMessage ul {
+        margin: 1rem 0 0 0;
+        padding: 0;
+        text-align: center;
+        list-style: none;
+    }
+}
+
 .form-group {
     display: flex;
     justify-content: space-around;
 
     .form-item-group {
         flex-basis: 45%;
-        margin-bottom: 3rem;
 
         display: flex;
         flex-direction: column;
