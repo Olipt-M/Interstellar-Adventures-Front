@@ -34,7 +34,7 @@
 </template>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 .carousel__item {
   min-height: 500px;
   width: 100%;
