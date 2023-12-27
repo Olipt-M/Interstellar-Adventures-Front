@@ -70,12 +70,20 @@
 
   // Calculate price
   const calculateJourneyPrice = (shipId) => {
-    if (selectedJourneyType.value === 1) {
-      return planet.value.journeyTypes.find(type => type.id === selectedJourneyType.value).base_price * ships.value.find(ship => ship.id === shipId).coeff_price;
+    if (selectedJourneyType.value === 1 || selectedJourneyType.value === 3) {
+      if (departureDate.value === null) {
+        return `à partir de ${ships.value.find(ship => ship.id === shipId).journeyType.base_price * ships.value.find(ship => ship.id === shipId).coeff_price}`;
+      } else {
+        return planet.value.journeyTypes.find(type => type.id === selectedJourneyType.value).base_price * ships.value.find(ship => ship.id === shipId).coeff_price;
+      }
     } else if (selectedJourneyType.value === 2) {
-      return planet.value.journeyTypes.find(type => type.id === selectedJourneyType.value).base_price * ships.value.find(ship => ship.id === shipId).coeff_price * journeyDuration.value;
-    } else if (selectedJourneyType.value === 3) {
-      return planet.value.journeyTypes.find(type => type.id === selectedJourneyType.value).base_price * ships.value.find(ship => ship.id === shipId).coeff_price;
+      if (departureDate.value === null || returnDate.value === null) {
+        return `à partir de ${ships.value.find(ship => ship.id === shipId).journeyType.base_price * ships.value.find(ship => ship.id === shipId).coeff_price}`;
+      } else {
+        return planet.value.journeyTypes.find(type => type.id === selectedJourneyType.value).base_price * ships.value.find(ship => ship.id === shipId).coeff_price * journeyDuration.value;
+        }
+    } else {
+      return `à partir de ${ships.value.find(ship => ship.id === shipId).journeyType.base_price * ships.value.find(ship => ship.id === shipId).coeff_price}`;
     }
   };
 

@@ -11,9 +11,13 @@
 </script>
 
 <template>
-  <HeaderLayout />
-  <RouterView />
-  <FooterLayout />
+  <div class="main-container">
+    <HeaderLayout />
+    <div class="mainLayout">
+      <RouterView/>
+    </div>
+    <FooterLayout />
+  </div>
   <Overlay :opened="menuStore.isMenuBurgerOpened" @click="menuStore.closeMenu()"/>
   <OverlayNotConnected :opened="userStore.isRequiredLoginOverlay"/>
 </template>
@@ -27,5 +31,17 @@
 
   input, textarea, select, button {
     font-family: 'Electrolize', sans-serif;
+  }
+</style>
+
+<style lang='scss' scoped>
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .mainLayout {
+    flex-grow: 1;
   }
 </style>

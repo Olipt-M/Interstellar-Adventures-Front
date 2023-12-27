@@ -112,7 +112,7 @@
         </div>
       </div>
       <TailSpin v-show="!isViewLoaded" class="loader"/>
-      <MainButton v-show="isViewLoaded && page < nbOfPlanets / maxPlanetsAtOnce" class="display-button" @click="displayMore()">Afficher plus</MainButton>
+      <MainButton v-show="isViewLoaded && page < nbOfPlanets / maxPlanetsAtOnce" class="display-button" @click="displayMore">Afficher plus</MainButton>
     </main>
   </div>
 </template>
