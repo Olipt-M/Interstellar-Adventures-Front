@@ -2,12 +2,15 @@
   const props = defineProps({
     colorMode: {
       type: String
+    },
+    disabled: {
+      type: Boolean
     }
   });
 </script>
 
 <template>
-  <button v-if="colorMode==='light'" type="button" class="light-mode"><slot/></button>
+  <button v-if="colorMode==='light'" type="button" class="light-mode" :disabled="disabled"><slot/></button>
   <button v-else type="button" class="dark-mode"><slot/></button>
 </template>
 
@@ -24,7 +27,7 @@
       color: $color-night-blue;
       transition: all 0.3s ease-in-out;
 
-      &:hover {
+      &:not(.disabled):hover {
         background: $color-dark-blue1;
         color: $color-light;
       }
@@ -36,7 +39,7 @@
       color: $color-light;
       transition: all 0.3s ease-in-out;
 
-      &:hover {
+      &:not(.disabled):hover {
         background: $color-light;
         color: $color-night-blue;
       }

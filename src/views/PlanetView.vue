@@ -27,7 +27,7 @@
   // Filter ships
   const selectedJourneyType = ref(null);
 
-  const filteredships = computed(() => {
+  const filteredShips = computed(() => {
     if (selectedJourneyType.value === null) {
       let allJourneyTypesIds = [];
       if (ships.value !== undefined) {
@@ -209,7 +209,7 @@
           <div class="ships-container">
             <h2 class="title-2">Choisissez votre vaisseau</h2>
               <div class="ships-flex-container">
-                <label v-for="ship in filteredships" :key="ship.id" :for="ship.id">
+                <label v-for="ship in filteredShips" :key="ship.id" :for="ship.id">
                   <input type="radio" :id="ship.id" name="ship" :value="ship.id" v-model="selectedShipId" class="ship-radio-input"/>
 
                   <div class="ship-container">
@@ -226,6 +226,7 @@
               colorMode="light" 
               class="main-button" 
               :class="{'disabled': !isFormCompleted}" 
+              :disabled="!isFormCompleted" 
               type="submit">
               Valider
             </MainButton>
