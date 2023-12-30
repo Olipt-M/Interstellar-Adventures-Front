@@ -10,8 +10,20 @@
 </script>
 
 <template>
-  <button v-if="colorMode==='light'" type="button" class="light-mode" :disabled="disabled"><slot/></button>
-  <button v-else type="button" class="dark-mode"><slot/></button>
+  <button v-if="colorMode==='light'" 
+    type="button" 
+    class="light-mode" 
+    :class="{'disabled': disabled}" 
+    :disabled="disabled">
+    <slot/>
+  </button>
+  <button v-else 
+    type="button" 
+    class="dark-mode" 
+    :class="{'disabled': disabled}" 
+    :disabled="disabled">
+    <slot/>
+  </button>
 </template>
 
 <style lang="scss" scoped>
