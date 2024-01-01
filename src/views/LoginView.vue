@@ -38,6 +38,7 @@ const redirectUser = () => {
 }
 
 const errorMessage = ref('');
+const loginErrorMessage = ref('');
 
 const userSignUp = () => {
     signUp ({
@@ -63,9 +64,7 @@ const userSignIn = () => {
         userStore.authenticateUser(response);
         redirectUser();
     })
-    .catch(error => {
-        errorMessage.value = error.data.message;
-    });
+    .catch(error => loginErrorMessage.value = error.data.message);
 }
 </script>
 
@@ -100,7 +99,7 @@ const userSignIn = () => {
                         </div>
                     </div>
 
-                    <p v-if="errorMessage" class="errorMessage">{{ errorMessage }}</p>
+                    <p v-if="loginErrorMessage" class="errorMessage">{{ loginErrorMessage }}</p>
 
                     <MainButton type="submit" class="main-button">Valider</MainButton>
                 </div>
