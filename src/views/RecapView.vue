@@ -56,6 +56,10 @@
       </div>
 
       <MainButton class="confirm-btn" @click="confirmJourney">Confirmer la réservation</MainButton>
+      <p class="cancel-question">Vous avez changé d'avis ? 
+        <router-link :to="{name: 'planets'}" 
+        class="cancel-link" 
+        @click="recapStore.resetJourney">Annuler</router-link></p>
     </main>
   </div>
 </template>
@@ -152,10 +156,19 @@
   }
 
   .confirm-btn {
+    margin-bottom: 0rem;
+  }
+
+  .cancel-question {
     margin-bottom: 5rem;
+    font-size: 1.2rem;
 
     @media (max-width: $sm-breakpoint) {
       margin-bottom: 3rem;
     }
+  }
+
+  .cancel-link {
+    color: $color-light;
   }
 </style>
