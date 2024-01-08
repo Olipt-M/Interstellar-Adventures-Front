@@ -34,6 +34,10 @@ export const getUserJourneys = async (id) => {
   return api(`/journeys/user/${id}`, { method: 'GET' });
 }
 
+export const deleteJourney = async (id) => {
+  return api(`/journeys/${id}`, { method: 'DELETE' });
+}
+
 export const signUp = async (credentials) => {
   return api(`/auth/register`, { method: 'POST', body: credentials });
 }

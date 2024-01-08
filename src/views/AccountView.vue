@@ -1,7 +1,8 @@
 <script setup>
   import H1TitleLayout from '@/components/layouts/H1TitleLayout.vue';
   import JourneyCard from '@/components/cards/JourneyCard.vue';
-  import { getUserJourneys } from '@/services/api.js';
+  import MainButton from '@/components/buttons/MainButton.vue';
+  import { getUserJourneys, deleteJourney } from '@/services/api.js';
   import { ref, onBeforeMount } from 'vue';
   import { useUserStore } from '@/stores/userStore.js';
   const userStore = useUserStore();
@@ -19,6 +20,11 @@
   }
 });
 
+const cancelJourney = (journeyId) => {
+  deleteJourney(journeyId);
+  journeys.value.splice(journeys.value.findIndex(journey => journey.id === journeyId), 1);
+}
+
 </script>
 
 <template>
@@ -27,6 +33,7 @@
       <h2>Mes prochains voyages</h2>
       <div v-for="(journey, index) in journeys" :key="journey.id">
         <JourneyCard :journey="journey"/>
+        <MainButton class="delete-btn" @click="cancelJourney(journey.id)">Annuler le voyage</MainButton>
         <hr v-if="index < journeys.length - 1">
       </div>
     </div>
@@ -41,7 +48,7 @@
   box-sizing: border-box;
   border-radius: 1rem;
   margin: 3rem 5rem 5rem 5rem;
-  gap: 1.5rem;
+  gap: 1rem;
   padding: 1.5rem;
   background : $color-dark-blue2;
 }
@@ -57,8 +64,13 @@ h2 {
   text-align: center;
 }
 
+.delete-btn {
+  display: block;
+  margin: 1rem auto ;
+}
+
 hr {
-    margin: 1rem auto;
+    margin: 3rem auto 0;
     width: 60%;
     color: $color-light;
   }
