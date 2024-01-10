@@ -25,7 +25,7 @@
         userEmail: userStore.getAuthenticatedUser.email
       })
       .then(() => {
-        recapStore.resetJourney;
+        recapStore.resetJourney();
         router.push({ name: 'account'});
       })
       .catch(error => console.error(error));
