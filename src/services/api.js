@@ -2,7 +2,7 @@ import { ofetch } from 'ofetch';
 const api = ofetch.create({baseURL: 'http://127.0.0.1:8000/api'}); //serveur local de Laravel
 
 export const getPlanets = async (page, limit) => {
-  return api(`/planets/${page}/${limit}`, { method: 'GET' });
+  return api(`/planets?page=${page}&limit=${limit}`, { method: 'GET' });
 }
 
 export const getPlanet = async (id) => {
